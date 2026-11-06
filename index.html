@@ -1,0 +1,1472 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e1116">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Тхэквондо ITF">
+<title>Тхэквондо ITF — мой путь по поясам</title>
+<style>
+:root {
+  --bg: #0e1116; --panel: #161b22; --panel2: #1d2430; --line: #2a3140;
+  --text: #eef1f6; --muted: #98a2b3; --red: #e5383b; --blue: #3b82f6; --gold: #ffb703; --ok: #3ccf7a;
+  --r: 16px; --gut: 16px;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2, h3 { line-height: 1.15; margin: 0; }
+p { margin: 0 0 10px; }
+a { color: var(--blue); }
+
+.top {
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 10px;
+  padding: 10px var(--gut); background: rgba(14, 17, 22, .92); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.logo { width: 30px; height: 30px; border-radius: 8px; flex: none;
+  background: conic-gradient(from 45deg, var(--red) 0 25%, var(--blue) 0 50%, var(--red) 0 75%, var(--blue) 0); }
+.top b { font-size: 17px; letter-spacing: .3px; }
+.top small { color: var(--muted); display: block; font-size: 12px; margin-top: -1px; }
+.top .me { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+
+main { max-width: 880px; margin: 0 auto; padding: 18px var(--gut) 24px; }
+
+.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; justify-content: space-around;
+  padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); background: #10151c; border-top: 1px solid var(--line);
+}
+.tabs button { flex: 1; max-width: 120px; background: none; border: 0; padding: 6px 2px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--muted); font-size: 12px; }
+.tabs button .i { font-size: 21px; line-height: 1; }
+.tabs button.on { color: var(--text); background: var(--panel2); }
+.tabs button.on .i { filter: drop-shadow(0 0 6px rgba(229, 56, 59, .6)); }
+
+.hero { padding: 22px 18px; border-radius: 22px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #1b2233, #131822 55%, #231319); border: 1px solid var(--line); }
+.hero::after { content: ""; position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(229, 56, 59, .35), transparent 70%); }
+.hero h1 { font-size: 30px; letter-spacing: .2px; }
+.hero h1 span { color: var(--red); }
+.hero p { color: var(--muted); max-width: 46ch; margin-top: 8px; }
+
+.sec { margin-top: 26px; }
+.sec > h2 { font-size: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.sec > p.lead { color: var(--muted); margin-top: -4px; margin-bottom: 12px; }
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; }
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+.stack { display: grid; gap: 10px; }
+
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 8px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); font-size: 14px; }
+.chip.on { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
+
+/* пояс (полоска) */
+.belt { display: inline-block; height: 14px; width: 74px; border-radius: 4px; flex: none;
+  border: 1px solid rgba(255, 255, 255, .28); box-shadow: 0 1px 0 rgba(0, 0, 0, .4) inset; }
+.belt.sm { width: 40px; height: 10px; }
+.belt.lg { width: 100%; height: 20px; border-radius: 6px; }
+
+/* лестница поясов */
+.ladder { display: grid; gap: 10px; }
+.bt { display: block; width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; }
+.bt .row { display: flex; align-items: center; gap: 12px; }
+.bt .ttl { font-weight: 700; }
+.bt .sub { color: var(--muted); font-size: 13px; }
+.bt .go { margin-left: auto; color: var(--muted); font-size: 20px; transition: transform .2s; }
+.bt.open .go { transform: rotate(90deg); }
+.bt.me { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(255, 183, 3, .3); }
+.bt.next { border-color: var(--red); }
+.tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; letter-spacing: .3px; vertical-align: middle; }
+.tag.me { background: var(--gold); color: #251a00; }
+.tag.next { background: var(--red); color: #fff; }
+.tag.zone { background: rgba(59, 130, 246, .18); color: #9cc0ff; }
+.bt .body { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); cursor: default; }
+.bt .body[hidden] { display: none; }
+
+.kv { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.kv .pill { background: var(--panel2); border-radius: 12px; padding: 7px 10px; font-size: 14px; }
+.kv .pill b { color: var(--gold); }
+
+.check { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.check:last-child { border-bottom: 0; }
+.check input { width: 22px; height: 22px; accent-color: var(--ok); flex: none; margin-top: 1px; }
+.check label { flex: 1; font-size: 15px; }
+.check small { color: var(--muted); display: block; font-size: 12.5px; }
+.check .x { background: none; border: 0; color: var(--muted); font-size: 18px; padding: 0 4px; }
+.add { display: flex; gap: 8px; margin-top: 10px; }
+.add input { flex: 1; min-width: 0; }
+input[type=text], input[type=search], textarea, select {
+  background: #0d1117; color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; width: 100%;
+}
+textarea { min-height: 84px; resize: vertical; }
+.btn { background: var(--red); border: 0; border-radius: 12px; padding: 10px 16px; font-weight: 700; color: #fff; }
+.btn.ghost { background: var(--panel2); color: var(--text); border: 1px solid var(--line); }
+.btn.blue { background: var(--blue); }
+.btn:active { transform: scale(.97); }
+
+.bar { height: 10px; border-radius: 999px; background: #0d1117; border: 1px solid var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--red), var(--gold)); border-radius: 999px; transition: width .3s; }
+.bar.ok i { background: linear-gradient(90deg, #1fb866, #7bf0b0); }
+
+/* техники */
+.tc { display: block; width: 100%; text-align: left; padding: 0; overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+.tc .pic { background: radial-gradient(circle at 50% 30%, #222a38, #131820); aspect-ratio: 6 / 5; }
+.tc .pic svg { display: block; width: 100%; height: 100%; }
+.tc .t { padding: 10px 12px 12px; }
+.tc .t b { display: block; font-size: 15px; line-height: 1.2; }
+.tc .t span { color: var(--muted); font-size: 12.5px; }
+.tc:hover { border-color: #3a4558; }
+
+/* окно с деталями */
+.sheet { position: fixed; inset: 0; z-index: 50; background: rgba(5, 8, 12, .72); display: flex; align-items: flex-end; justify-content: center; }
+.sheet[hidden] { display: none; }
+.sheet .in { width: 100%; max-width: 720px; max-height: 94vh; overflow-y: auto; background: var(--bg); border: 1px solid var(--line);
+  border-radius: 22px 22px 0 0; padding: 16px var(--gut) calc(24px + env(safe-area-inset-bottom)); animation: up .22s ease-out; }
+@media (min-width: 760px) { .sheet { align-items: center; } .sheet .in { border-radius: 22px; } }
+@keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet .head { display: flex; align-items: flex-start; gap: 10px; }
+.sheet .head h2 { font-size: 21px; }
+.sheet .head small { color: var(--muted); display: block; margin-top: 2px; }
+.sheet .close { margin-left: auto; background: var(--panel2); border: 1px solid var(--line); width: 38px; height: 38px; border-radius: 12px; font-size: 18px; flex: none; }
+.stage { margin-top: 12px; background: radial-gradient(circle at 50% 30%, #222a38, #12171e); border: 1px solid var(--line); border-radius: 18px; padding: 8px; }
+.stage .fig svg { display: block; width: 100%; max-height: 320px; }
+.stage .cap { text-align: center; font-weight: 600; min-height: 24px; padding: 4px 6px 2px; }
+.ctrls { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 0 4px; }
+.ctrls button { width: 46px; height: 42px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); font-size: 18px; }
+.ctrls .dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: #3a4558; display: block; }
+.dots i.on { background: var(--red); }
+ol.steps { padding-left: 22px; margin: 6px 0; }
+ol.steps li { margin: 7px 0; }
+ul.mis { list-style: none; padding: 0; margin: 6px 0; }
+ul.mis li { padding: 6px 0 6px 28px; position: relative; }
+ul.mis li::before { content: "✗"; position: absolute; left: 4px; color: var(--red); font-weight: 800; }
+.note { background: rgba(255, 183, 3, .09); border: 1px solid rgba(255, 183, 3, .3); border-radius: 14px; padding: 11px 13px; font-size: 14px; color: #f6dfa4; }
+.note.blue { background: rgba(59, 130, 246, .1); border-color: rgba(59, 130, 246, .35); color: #bcd3ff; }
+
+/* тули */
+.tul .head { display: flex; align-items: center; gap: 10px; }
+.tul .num { width: 46px; height: 46px; border-radius: 14px; background: var(--panel2); display: grid; place-items: center; font-weight: 800; font-size: 18px; flex: none; border: 1px solid var(--line); }
+.tul h3 { font-size: 17px; }
+.tul .sub { color: var(--muted); font-size: 13px; }
+.tul .meaning { color: #c4cbd8; font-size: 14.5px; margin: 10px 0; }
+.chunks { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.chunks span { font-size: 12.5px; padding: 4px 9px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--line); color: var(--muted); }
+.chunks span.done { background: rgba(60, 207, 122, .15); border-color: rgba(60, 207, 122, .5); color: #8df0b9; }
+input[type=range] { width: 100%; accent-color: var(--red); height: 32px; }
+
+/* слова */
+.word { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+.word .h { font-size: 22px; min-width: 62px; color: #ffd9a0; }
+.word .k { font-weight: 700; }
+.word .r { color: var(--muted); font-size: 14px; }
+.opts { display: grid; gap: 10px; margin-top: 14px; }
+.opt { padding: 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); text-align: left; font-size: 16px; }
+.opt.good { background: rgba(60, 207, 122, .18); border-color: var(--ok); }
+.opt.bad { background: rgba(229, 56, 59, .2); border-color: var(--red); }
+.qbig { font-size: 26px; font-weight: 800; text-align: center; padding: 18px 8px 4px; }
+.qbig small { display: block; font-size: 14px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+
+details.fold { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0 14px; margin-bottom: 10px; }
+details.fold summary { padding: 13px 0; font-weight: 700; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+details.fold summary::after { content: "▸"; margin-left: auto; color: var(--muted); transition: transform .2s; }
+details.fold[open] summary::after { transform: rotate(90deg); }
+details.fold .c { padding: 0 0 14px; color: #cfd5e1; }
+details.fold .c ul, details.fold .c ol { padding-left: 20px; margin: 6px 0; }
+
+.me-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+.me-pick button { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12.5px; }
+.me-pick button.on { border-color: var(--gold); background: rgba(255, 183, 3, .1); }
+.foot { margin-top: 34px; color: var(--muted); font-size: 13px; text-align: center; }
+.row2 { display: flex; gap: 10px; flex-wrap: wrap; }
+.row2 > * { flex: 1; min-width: 140px; }
+
+@media (min-width: 760px) { .hero h1 { font-size: 38px; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* движения тула */
+.mv { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.mv .n { width: 26px; text-align: right; color: var(--muted); font-weight: 700; flex: none; }
+.mv input[type=text] { flex: 1; min-width: 0; padding: 8px 10px; }
+.mv input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--ok); flex: none; }
+.mv .x { background: none; border: 0; color: var(--muted); font-size: 18px; padding: 0 4px; }
+.qbig.q { font-size: 20px; text-align: left; padding: 16px 2px 2px; line-height: 1.3; }
+
+.card .ladder { margin-top: 8px; }
+.card .bt { background: var(--panel2); }
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo" aria-hidden="true"></div>
+  <div><b>Тхэквондо ITF</b><small>путь по поясам</small></div>
+  <div class="me" id="meBadge"></div>
+</header>
+
+<main id="app"></main>
+
+<nav class="tabs" id="tabs" aria-label="Разделы">
+  <button data-act="tab" data-tab="home"><span class="i">🥋</span>Главная</button>
+  <button data-act="tab" data-tab="belts"><span class="i">🎽</span>Пояса</button>
+  <button data-act="tab" data-tab="tech"><span class="i">🦵</span>Техники</button>
+  <button data-act="tab" data-tab="tuls"><span class="i">📜</span>Тули</button>
+  <button data-act="tab" data-tab="words"><span class="i">🇰🇷</span>Слова</button>
+</nav>
+
+<div class="sheet" id="sheet" hidden></div>
+
+<script>
+/* ============================================================
+   data.js — пояса, тули, слова, принципы ITF
+   ВАЖНО: схема общая. В разных ITF-организациях и клубах
+   детали экзамена отличаются — последнее слово за тренером.
+   ============================================================ */
+
+const C = { white: '#f2f2f2', yellow: '#ffd400', green: '#2e9e4a', blue: '#2a63d1', red: '#d62b2b', black: '#161616' };
+
+/* Тули ITF для цветных поясов (гып) и первые тули чёрного пояса */
+const TULS = [
+  { id: 'chonji',  name: 'Чон-Джи',  rom: 'Chon-Ji',  moves: 19, belt: 'g9',
+    meaning: 'Небо и Земля. Первый тул: начало, как «сотворение мира». В нём две похожие части — одна про Небо, другая про Землю.' },
+  { id: 'dangun',  name: 'Тан-Гун',  rom: 'Dan-Gun',  moves: 21, belt: 'g8',
+    meaning: 'Назван в честь Тан-Гуна — легендарного основателя Кореи (по преданию, 2333 год до н. э.).' },
+  { id: 'dosan',   name: 'До-Сан',   rom: 'Do-San',   moves: 24, belt: 'g7',
+    meaning: 'Псевдоним Ан Чхан Хо (1876–1938), корейского деятеля, который посвятил жизнь образованию и независимости Кореи. 24 движения — вся его жизнь.' },
+  { id: 'wonhyo',  name: 'Вон-Хё',   rom: 'Won-Hyo',  moves: 28, belt: 'g6',
+    meaning: 'Монах Вон Хё, принёсший буддизм в государство Силла в 686 году.' },
+  { id: 'yulgok',  name: 'Юль-Гок',  rom: 'Yul-Gok',  moves: 38, belt: 'g5',
+    meaning: 'Псевдоним философа Ли И (1536–1584), которого называли «Конфуцием Кореи». 38 движений — это 38-я параллель, рядом с местом его рождения.' },
+  { id: 'joonggun', name: 'Чжун-Гун', rom: 'Joong-Gun', moves: 32, belt: 'g4',
+    meaning: 'Ан Чжун Гын — борец за независимость Кореи. 32 движения — его возраст, когда его жизнь оборвалась.' },
+  { id: 'toigye',  name: 'Той-Ге',   rom: 'Toi-Gye',  moves: 37, belt: 'g3',
+    meaning: 'Псевдоним учёного Ли Хвана (XVI век), главного конфуцианского философа Кореи. 37 движений — 37-я параллель, место его рождения.' },
+  { id: 'hwarang', name: 'Хва-Ран',  rom: 'Hwa-Rang', moves: 29, belt: 'g2',
+    meaning: 'Хваран — молодые воины государства Силла (около VII века). 29 — номер дивизии, где развивалось тхэквондо.' },
+  { id: 'choongmoo', name: 'Чхун-Му', rom: 'Choong-Moo', moves: 30, belt: 'g1',
+    meaning: 'Адмирал Ли Сун Син (XVI век), создатель «кораблей-черепах», защитник Кореи от вторжения.' },
+  { id: 'kwanggae', name: 'Кван-Ге', rom: 'Kwang-Gae', moves: 39, belt: 'dan1',
+    meaning: 'Король Кванггэто Великий (правил с 391 года) — расширил земли Кореи. 39 движений — «391» в начале его правления.' },
+  { id: 'poeun',   name: 'По-Ын',    rom: 'Po-Eun',   moves: 36, belt: 'dan1',
+    meaning: 'Один из тулей чёрного пояса. Назван в честь корейского поэта и учёного XIV века.' },
+  { id: 'gebaek',  name: 'Ге-Бэк',   rom: 'Ge-Baek',  moves: 44, belt: 'dan1',
+    meaning: 'Один из тулей чёрного пояса. Назван в честь воина эпохи Пэкче.' }
+];
+
+/* Пояса: от 10-го гыпа до 1-го дана */
+const BELTS = [
+  { id: 'g10', n: '10 гып', name: 'Белый',                     c: C.white,  s: null,     tul: null,       step: null,
+    focus: 'Знакомство с залом: этикет, поклон, стойка готовности, первые стойки и самые простые блоки и удары. Счёт до 10 по-корейски. Тулей пока нет.' },
+  { id: 'g9',  n: '9 гып',  name: 'Белый с жёлтой полоской',   c: C.white,  s: C.yellow, tul: 'chonji',   step: 3,
+    focus: 'Первый тул. В нём работаешь на базе: передняя стойка, нижний и средний блок, средний удар.', techs: ['gunnun', 'arae', 'bakat', 'baro'] },
+  { id: 'g8',  n: '8 гып',  name: 'Жёлтый',                    c: C.yellow, s: null,     tul: 'dangun',   step: 3,
+    focus: 'Тул становится длиннее. Больше направлений и комбинаций. Следи за равновесием и возвратом на точку старта.' },
+  { id: 'g7',  n: '7 гып',  name: 'Жёлтый с зелёной полоской', c: C.yellow, s: C.green,  tul: 'dosan',    step: 3,
+    focus: 'Тул До-Сан. Учишься держать ритм и точные стойки на 24 движения.' },
+  { id: 'g6',  n: '6 гып',  name: 'Зелёный',                   c: C.green,  s: null,     tul: 'wonhyo',   step: 2,
+    focus: 'Зелёный пояс — «растёшь, как росток». Тул Вон-Хё, дальше тебя ждут связки техник посложнее.' },
+  { id: 'g5',  n: '5 гып',  name: 'Зелёный с синей полоской',  c: C.green,  s: C.blue,   tul: 'yulgok',   step: 2,
+    focus: 'Самый длинный из тулей цветных поясов — 38 движений. Тут важнее всего память и дыхание.' },
+  { id: 'g4',  n: '4 гып',  name: 'Синий',                     c: C.blue,   s: null,     tul: 'joonggun', step: 2,
+    focus: 'Синий — «небо, к которому растёт растение». Тул Чжун-Гун, техники сложнее и быстрее.' },
+  { id: 'g3',  n: '3 гып',  name: 'Синий с красной полоской',  c: C.blue,   s: C.red,    tul: 'toigye',   step: 1,
+    focus: 'Тул Той-Ге: 37 движений. Обычно здесь идёт одношаговый спарринг.' },
+  { id: 'g2',  n: '2 гып',  name: 'Красный',                   c: C.red,    s: null,     tul: 'hwarang',  step: 1,
+    focus: 'Красный — «опасность, надо уметь себя контролировать». Тул Хва-Ран, скорость и сила.' },
+  { id: 'g1',  n: '1 гып',  name: 'Красный с чёрной полоской', c: C.red,    s: C.black,  tul: 'choongmoo', step: 1,
+    focus: 'Последний цветной пояс. Тул Чхун-Му. Готовишься к чёрному: стабильность важнее скорости.' },
+  { id: 'dan1', n: '1 дан', name: 'Чёрный',                    c: C.black,  s: null,     tul: 'kwanggae', step: null,
+    focus: 'Чёрный пояс — не конец, а начало. Тули чёрного пояса: Кван-Ге, По-Ын, Ге-Бэк.' }
+];
+
+/* что вообще могут проверять на экзамене (набор разный у разных клубов!) */
+const EXAM_PARTS = [
+  { id: 'tul',   t: 'Тул (форма)', d: 'Главное: точные стойки, блоки и удары по порядку, правильные направления, равновесие, ритм, синусоида. Тул заканчивается там же, где начался.' },
+  { id: 'base',  t: 'Базовая техника', d: 'Стойки, блоки, удары руками и ногами — отдельно от тулей, по команде.' },
+  { id: 'step',  t: 'Шаговый спарринг', d: 'Заранее известные пары действий: в ранних поясах обычно 3-шаговый, дальше 2-шаговый, потом 1-шаговый.' },
+  { id: 'free',  t: 'Свободный спарринг', d: 'Если он есть на твоём уровне: контроль, дистанция и уважение к партнёру важнее силы.' },
+  { id: 'self',  t: 'Самооборона (hosinsul)', d: 'Освобождения от захватов и защита. Бывает не на всех поясах.' },
+  { id: 'break', t: 'Разбивание (kyokpa)', d: 'Доска или пластик — проверка точности и силы удара. Тренер подбирает технику под пояс.' },
+  { id: 'theo',  t: 'Теория и слова', d: 'Корейские названия, этикет, принципы ITF и клятва. Здесь помогает раздел «Слова».' },
+  { id: 'fit',   t: 'Физподготовка', d: 'Отжимания, пресс, гибкость — нормативы определяет клуб.' }
+];
+
+/* принципы и история */
+const TENETS = [
+  { k: 'Ye Ui',   h: '예의',    r: 'Вежливость' },
+  { k: 'Yom Chi', h: '염치',    r: 'Честность' },
+  { k: 'In Nae',  h: '인내',    r: 'Упорство' },
+  { k: 'Guk Gi',  h: '극기',    r: 'Самоконтроль' },
+  { k: 'Baekjul Boolgool', h: '백절불굴', r: 'Несгибаемый дух' }
+];
+const OATH = [
+  'Соблюдать принципы тхэквондо.',
+  'Уважать инструктора и старших учеников.',
+  'Никогда не применять тхэквондо во вред.',
+  'Быть защитником свободы и справедливости.',
+  'Строить более мирный мир.'
+];
+const POWER = [
+  { k: 'Реакция (reaction force)', d: 'Чем сильнее ты отталкиваешься от пола и тянешь второй кулак назад, тем сильнее удар вперёд.' },
+  { k: 'Концентрация', d: 'Вся сила собирается в маленькую точку в самый момент удара: напрягаешь мышцы только в конце.' },
+  { k: 'Равновесие', d: 'Без устойчивой стойки не будет силы: вес под контролем до, во время и после техники.' },
+  { k: 'Дыхание', d: 'Выдох в момент удара, вдох между техниками. Дыхание тоже учат, как технику.' },
+  { k: 'Масса', d: 'В удар вкладывается вес всего тела — особенно помогает опускание бёдер (синусоида).' },
+  { k: 'Скорость', d: 'Скорость растёт, когда мышцы расслаблены, а напрягаются только в конце.' }
+];
+
+/* Слова: g = группа, k = транслит, h = хангыль, r = перевод */
+const WORDS = [
+  /* команды */
+  { g: 'cmd', k: 'Charyot', h: '차렷', r: 'Смирно' },
+  { g: 'cmd', k: 'Kyongye', h: '경례', r: 'Поклон' },
+  { g: 'cmd', k: 'Junbi', h: '준비', r: 'Приготовиться' },
+  { g: 'cmd', k: 'Shijak', h: '시작', r: 'Начали' },
+  { g: 'cmd', k: 'Baro', h: '바로', r: 'Вернуться в исходное положение' },
+  { g: 'cmd', k: 'Kuman', h: '그만', r: 'Стоп, закончили' },
+  { g: 'cmd', k: 'Kihap', h: '기합', r: 'Выкрик, который собирает силу' },
+  /* зал */
+  { g: 'dojo', k: 'Dojang', h: '도장', r: 'Зал для занятий' },
+  { g: 'dojo', k: 'Dobok', h: '도복', r: 'Форма (кимоно)' },
+  { g: 'dojo', k: 'Ti', h: '띠', r: 'Пояс' },
+  { g: 'dojo', k: 'Sabumnim', h: '사범님', r: 'Инструктор, тренер' },
+  { g: 'dojo', k: 'Tul', h: '틀', r: 'Форма (формальные упражнения)' },
+  /* техники */
+  { g: 'tech', k: 'Sogi', h: '서기', r: 'Стойка' },
+  { g: 'tech', k: 'Makgi', h: '막기', r: 'Блок' },
+  { g: 'tech', k: 'Jirugi', h: '지르기', r: 'Удар кулаком по прямой (выпад)' },
+  { g: 'tech', k: 'Chagi', h: '차기', r: 'Удар ногой' },
+  { g: 'tech', k: 'Taerigi', h: '', r: 'Удар (ударная техника)' },
+  { g: 'tech', k: 'Gunnun sogi', h: 'ㄱ', r: 'Передняя стойка (кконын соги), по форме ног похожа на ㄱ' },
+  { g: 'tech', k: 'Niunja sogi', h: '니은자 서기', r: 'Стойка ㄴ: корпус боком, вес на задней ноге' },
+  { g: 'tech', k: 'Ap chagi', h: '앞차기', r: 'Передний удар ногой' },
+  { g: 'tech', k: 'Dollyo chagi', h: '돌려차기', r: 'Боковой удар ногой по дуге (доли чаги)' },
+  { g: 'tech', k: 'Yop chagi', h: '옆차기', r: 'Удар ногой в сторону (ёп чаги)' },
+  { g: 'tech', k: 'Dwit chagi', h: '뒤차기', r: 'Задний удар ногой' },
+  { g: 'tech', k: 'Joomuk', h: '주먹', r: 'Кулак' },
+  { g: 'tech', k: 'Sonkal', h: '손날', r: 'Ребро ладони' },
+  { g: 'tech', k: 'Palmok', h: '팔목', r: 'Предплечье' },
+  { g: 'tech', k: 'Balkal', h: '발날', r: 'Ребро стопы' },
+  /* направления и уровни */
+  { g: 'dir', k: 'Ap', h: '앞', r: 'Вперёд, передний' },
+  { g: 'dir', k: 'Yop', h: '옆', r: 'Сбоку, боковой' },
+  { g: 'dir', k: 'Dwit', h: '뒤', r: 'Назад, задний' },
+  { g: 'dir', k: 'Dollyo', h: '돌려', r: 'Круговой (по дуге)' },
+  { g: 'dir', k: 'Arae', h: '아래', r: 'Нижний уровень' },
+  { g: 'dir', k: 'Momtong', h: '몸통', r: 'Средний уровень (корпус)' },
+  { g: 'dir', k: 'Olgul', h: '얼굴', r: 'Верхний уровень (лицо)' },
+  { g: 'dir', k: 'Bandae', h: '반대', r: 'Противоположный (рука и нога разных сторон)' },
+  /* счёт */
+  { g: 'num', k: 'Hana', h: '하나', r: '1' },
+  { g: 'num', k: 'Dool', h: '둘', r: '2' },
+  { g: 'num', k: 'Set', h: '셋', r: '3' },
+  { g: 'num', k: 'Net', h: '넷', r: '4' },
+  { g: 'num', k: 'Dasot', h: '다섯', r: '5' },
+  { g: 'num', k: 'Yosot', h: '여섯', r: '6' },
+  { g: 'num', k: 'Ilgop', h: '일곱', r: '7' },
+  { g: 'num', k: 'Yodol', h: '여덟', r: '8' },
+  { g: 'num', k: 'Ahop', h: '아홉', r: '9' },
+  { g: 'num', k: 'Yol', h: '열', r: '10' }
+];
+const WORD_GROUPS = [
+  { id: 'cmd', label: 'Команды' },
+  { id: 'dojo', label: 'В зале' },
+  { id: 'tech', label: 'Техники' },
+  { id: 'dir', label: 'Направления' },
+  { id: 'num', label: 'Счёт 1–10' }
+];
+
+/* Теоретические вопросы по поясам: [вопрос, верный ответ, [3 неверных], пояс]
+   Пояс = на какой экзамен вопрос (g10 = белый, g9 = белый с жёлтой полоской, ...) */
+const THEORY = [
+  /* --- 10 гып: белый --- */
+  ['Что означает «Тхэ» в названии тхэквондо?', 'Нога', ['Рука', 'Путь', 'Дух'], 'g10'],
+  ['Что означает «Квон»?', 'Кулак, рука', ['Нога', 'Путь', 'Сила'], 'g10'],
+  ['Что означает «До»?', 'Путь', ['Удар', 'Нога', 'Пояс'], 'g10'],
+  ['Как можно перевести слово «тхэквондо» целиком?', 'Путь ноги и кулака', ['Танец с мечом', 'Искусство молчания', 'Борьба на земле'], 'g10'],
+  ['Кто основатель тхэквондо ITF?', 'Генерал Чхве Хон Хи', ['Тан-Гун', 'Ли Сун Син', 'Ан Чхан Хо'], 'g10'],
+  ['Сколько принципов у тхэквондо?', '5', ['3', '4', '7'], 'g10'],
+  ['Что означает белый пояс?', 'Невинность, начало пути', ['Опасность', 'Небо', 'Зрелость'], 'g10'],
+  ['Что такое тул?', 'Формальные упражнения: бой с воображаемым соперником', ['Вид пояса', 'Экзамен по теории', 'Удар ногой'], 'g10'],
+  /* --- 9 гып --- */
+  ['Принцип «Ye Ui» — это…', 'Вежливость', ['Упорство', 'Честность', 'Самоконтроль'], 'g9'],
+  ['Принцип «Yom Chi» — это…', 'Честность', ['Вежливость', 'Упорство', 'Несгибаемый дух'], 'g9'],
+  ['Принцип «In Nae» — это…', 'Упорство', ['Вежливость', 'Самоконтроль', 'Честность'], 'g9'],
+  ['Что означает название тула Чон-Джи?', 'Небо и Земля', ['Горная река', 'Белый тигр', 'Первый удар'], 'g9'],
+  /* --- 8 гып --- */
+  ['Принцип «Guk Gi» — это…', 'Самоконтроль', ['Упорство', 'Вежливость', 'Несгибаемый дух'], 'g8'],
+  ['Принцип «Baekjul Boolgool» — это…', 'Несгибаемый дух', ['Честность', 'Вежливость', 'Самоконтроль'], 'g8'],
+  ['Что означает жёлтый пояс?', 'Земля, в которую сажают росток', ['Небо', 'Опасность', 'Невинность'], 'g8'],
+  ['В каком году тхэквондо получило своё название?', '1955', ['1966', '1945', '1975'], 'g8'],
+  ['В каком году появилась федерация ITF?', '1966', ['1946', '1955', '1988'], 'g8'],
+  ['В честь кого назван тул Тан-Гун?', 'Легендарного основателя Кореи', ['Адмирала', 'Монаха', 'Короля-воина'], 'g8'],
+  /* --- 7 гып --- */
+  ['Сколько пунктов в клятве ученика?', '5', ['3', '7', '10'], 'g7'],
+  ['Какой пункт входит в клятву ученика?', 'Уважать инструктора и старших', ['Всегда побеждать', 'Не ходить на соревнования', 'Бить первым'], 'g7'],
+  ['Чем бьют ап чаги (передний удар)?', 'Подушечкой стопы', ['Пяткой', 'Ребром стопы', 'Пальцами'], 'g7'],
+  ['Когда делают выдох при ударе?', 'В момент удара', ['До замаха', 'Только после удара', 'Вообще не дышат'], 'g7'],
+  ['В честь кого назван тул До-Сан?', 'Ан Чхан Хо — деятеля образования и независимости', ['Монаха Вон Хё', 'Адмирала Ли Сун Син', 'Короля Кванггэто'], 'g7'],
+  /* --- 6 гып --- */
+  ['Что означает зелёный пояс?', 'Рост растения', ['Земля', 'Опасность', 'Зрелость'], 'g6'],
+  ['Сколько законов силы удара в тхэквондо?', '6', ['3', '5', '10'], 'g6'],
+  ['Что такое синусоида в ITF?', 'Плавное движение вверх и вниз при шаге', ['Круговой удар', 'Название тула', 'Вид стойки'], 'g6'],
+  ['Чем бьют ёп чаги (удар в сторону)?', 'Ребром стопы', ['Подушечкой стопы', 'Пяткой', 'Подъёмом'], 'g6'],
+  ['Чем бьют дви чаги (задний удар)?', 'Пяткой', ['Подушечкой стопы', 'Ребром стопы', 'Носком'], 'g6'],
+  ['Кто такой Вон Хё, в честь которого назван тул?', 'Монах, принёсший буддизм в Силла', ['Корейский адмирал', 'Философ-конфуцианец', 'Основатель Кореи'], 'g6'],
+  /* --- 5 гып --- */
+  ['Куда направлен средний удар (момтонг)?', 'В корпус, в солнечное сплетение', ['В лицо', 'В колено', 'В голову'], 'g5'],
+  ['Как распределён вес в стойке ㄴ (нинча соги)?', 'Около 70% на заднюю ногу', ['Поровну', '70% на переднюю ногу', 'Всё на переднюю'], 'g5'],
+  ['Какая длина передней стойки (кконын соги)?', 'Около полутора ширин плеч', ['Две ступни', 'Три ширины плеч', 'Одна ширина плеч'], 'g5'],
+  ['Где заканчивается тул?', 'Там же, где начался', ['У стены', 'В центре зала', 'Где угодно'], 'g5'],
+  ['Кто такой Юль-Гок, в честь которого назван тул?', 'Философ Ли И — «Конфуций Кореи»', ['Адмирал Ли Сун Син', 'Монах Вон Хё', 'Основатель Кореи'], 'g5'],
+  ['Почему в туле Юль-Гок 38 движений?', 'Это 38-я параллель, рядом с местом рождения философа', ['Столько лет жил философ', 'Столько ударов в клятве', 'Просто красивое число'], 'g5'],
+  /* --- 4 гып --- */
+  ['Что означает синий пояс?', 'Небо, к которому тянется растение', ['Земля', 'Опасность', 'Невинность'], 'g4'],
+  ['Что такое «хосинсуль»?', 'Самооборона', ['Разбивание досок', 'Свободный спарринг', 'Тул'], 'g4'],
+  ['Что такое «кекпа»?', 'Разбивание (досок, пластика)', ['Самооборона', 'Свободный спарринг', 'Поклон'], 'g4'],
+  ['Кто такой Ан Чжун Гын, в честь которого назван тул Чжун-Гун?', 'Борец за независимость Кореи', ['Адмирал', 'Монах', 'Основатель Кореи'], 'g4'],
+  /* --- 3 гып --- */
+  ['Что такое «чаю мацоги»?', 'Свободный спарринг', ['Самооборона', 'Разбивание', 'Тул'], 'g3'],
+  ['Кто такой Той-Ге, в честь которого назван тул?', 'Учёный-философ Ли Хван (XVI век)', ['Адмирал Ли Сун Син', 'Монах Вон Хё', 'Король-воин'], 'g3'],
+  /* --- 2 гып --- */
+  ['Что означает красный пояс?', 'Опасность: учись контролировать себя', ['Небо', 'Земля', 'Невинность'], 'g2'],
+  ['Кто такие хваран, в честь которых назван тул Хва-Ран?', 'Молодые воины государства Силла', ['Корейские адмиралы', 'Монахи', 'Придворные учёные'], 'g2'],
+  /* --- 1 гып --- */
+  ['Что означает чёрный пояс?', 'Зрелость, противоположность белому', ['Опасность', 'Небо', 'Земля'], 'g1'],
+  ['Кто такой Ли Сун Син, в честь которого назван тул Чхун-Му?', 'Адмирал, создатель «кораблей-черепах»', ['Монах-проповедник', 'Король-воин', 'Основатель Кореи'], 'g1']
+];
+
+</script>
+<script>
+/* ============================================================
+   figure.js — рисованный человечек-тхэквондист (SVG, без картинок)
+   Скелет: бёдра → торс → плечи → руки; ноги считаются по двум
+   «ступням» (так легко ставить стойки).
+   Углы рук: 0° = вниз, 90° = вперёд, 180° = вверх, -90° = назад.
+   ============================================================ */
+const FIG = (function () {
+  const G = 182;                // линия земли
+  const LEN = { torso: 50, neck: 6, head: 11, ua: 26, fa: 25, th: 40, sh: 40, foot: 13 };
+
+  const DEFAULT = {
+    view: 'side',
+    hip: [110, 84],
+    fa: [112, 0], fb: [108, 0],     // ступни (ближняя, дальняя): x, высота над землёй
+    torso: 0, head: 0, look: 1,     // look: 1 смотрит вперёд, -1 назад
+    aa: [5, 10], ab: [-5, 5],       // руки: [плечо, предплечье]
+    bend: [1, 1],                   // куда смотрит колено: 1 вперёд/наружу, -1 назад
+    ft: [90, 90],                   // угол стопы (90 = носок вперёд); 'x' = носок на зрителя
+    hit: null                       // 'aa' | 'ab' | 'fa' | 'fb'
+  };
+
+  function fill(p) {
+    const o = JSON.parse(JSON.stringify(DEFAULT));
+    for (const k in p) o[k] = JSON.parse(JSON.stringify(p[k]));
+    return o;
+  }
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function lerpV(a, b, t) {
+    if (Array.isArray(a)) return a.map((v, i) => lerpV(v, b[i], t));
+    if (typeof a === 'number' && typeof b === 'number') return lerp(a, b, t);
+    return t < 0.5 ? a : b;
+  }
+  function mix(A, B, t) {
+    const o = {};
+    for (const k in A) o[k] = (k === 'view' || k === 'hit') ? (t < 0.5 ? A[k] : B[k]) : lerpV(A[k], B[k], t);
+    return o;
+  }
+  const ease = t => t * t * (3 - 2 * t);
+
+  const rad = d => d * Math.PI / 180;
+  const vec = (a, l) => [Math.sin(rad(a)) * l, Math.cos(rad(a)) * l];
+
+  // двухзвенный IK: бедро H → щиколотка A, колено смотрит в сторону dir
+  function ik(H, A, l1, l2, dir) {
+    let dx = A[0] - H[0], dy = A[1] - H[1];
+    let d = Math.hypot(dx, dy) || 0.001;
+    const max = l1 + l2 - 0.05;
+    if (d > max) { const s = max / d; dx *= s; dy *= s; d = max; A = [H[0] + dx, H[1] + dy]; }
+    const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d);
+    const h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+    const mx = H[0] + dx * a / d, my = H[1] + dy * a / d;
+    let px = -dy / d, py = dx / d;
+    const wantPos = dir > 0;
+    if (Math.abs(px) < 0.08) { if (py > 0) { px = -px; py = -py; } }       // колено вверх
+    else if ((px > 0) !== wantPos) { px = -px; py = -py; }
+    return { K: [mx + px * h, my + py * h], A };
+  }
+
+  const path = pts => 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L');
+
+  function limb(pts, col, w) {
+    const d = path(pts);
+    return `<path d="${d}" fill="none" stroke="#0b0f15" stroke-width="${w + 3.5}" stroke-linecap="round" stroke-linejoin="round"/>` +
+           `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+
+  function star(x, y) {
+    let s = '';
+    for (let i = 0; i < 8; i++) {
+      const a = i * Math.PI / 4;
+      const r1 = 9, r2 = i % 2 ? 14 : 18;
+      s += `<line x1="${(x + Math.cos(a) * r1).toFixed(1)}" y1="${(y + Math.sin(a) * r1).toFixed(1)}" x2="${(x + Math.cos(a) * r2).toFixed(1)}" y2="${(y + Math.sin(a) * r2).toFixed(1)}" stroke="#ffb703" stroke-width="2.4" stroke-linecap="round"/>`;
+    }
+    return s;
+  }
+
+  // ---- главная функция: поза → SVG-строка ----
+  function render(pose, opt) {
+    opt = opt || {};
+    const p = fill(pose);
+    const belt = opt.belt || '#2e9e4a';
+    const stripe = opt.stripe || null;
+    const front = p.view === 'front';
+    const NEAR = '#f4f6fa', FAR = '#aeb6c4';
+
+    const hipC = [p.hip[0], G - p.hip[1]];
+    const hOff = front ? 8 : 0;
+    const sOff = front ? 14 : 0;
+    const hipN = [hipC[0] + hOff, hipC[1]], hipF = [hipC[0] - hOff, hipC[1]];
+
+    const tv = [Math.sin(rad(p.torso)) * LEN.torso, -Math.cos(rad(p.torso)) * LEN.torso];
+    const shC = [hipC[0] + tv[0], hipC[1] + tv[1]];
+    const shN = [shC[0] + sOff, shC[1]], shF = [shC[0] - sOff, shC[1]];
+
+    const ankleN = [p.fa[0], G - 4 - p.fa[1]];
+    const ankleF = [p.fb[0], G - 4 - p.fb[1]];
+    const legN = ik(hipN, ankleN, LEN.th, LEN.sh, p.bend[0]);
+    const legF = ik(hipF, ankleF, LEN.th, LEN.sh, p.bend[1]);
+
+    function arm(sh, ang) {
+      const u = vec(ang[0], LEN.ua), f = vec(ang[1], LEN.fa);
+      const E = [sh[0] + u[0], sh[1] + u[1]];
+      const F = [E[0] + f[0], E[1] + f[1]];
+      return { E, F };
+    }
+    const armN = arm(shN, p.aa), armF = arm(shF, p.ab);
+
+    // голова
+    const hd = p.torso + p.head;
+    const neck = [shC[0] + Math.sin(rad(hd)) * (LEN.neck + LEN.head), shC[1] - Math.cos(rad(hd)) * (LEN.neck + LEN.head)];
+
+    // стопа
+    function foot(leg, ang, col, w) {
+      if (ang === 'x') {
+        return `<ellipse cx="${leg.A[0].toFixed(1)}" cy="${(leg.A[1] + 1).toFixed(1)}" rx="5.5" ry="3.2" fill="#e8c9a8" stroke="#0b0f15" stroke-width="1.4"/>`;
+      }
+      const v = vec(ang, front ? 6 : LEN.foot);
+      const t = [leg.A[0] + v[0], leg.A[1] + v[1]];
+      return limb([leg.A, t], '#e8c9a8', 5.5);
+    }
+
+    let s = '';
+    // земля и тень
+    s += `<line x1="8" y1="${G + 5}" x2="232" y2="${G + 5}" stroke="#2a3140" stroke-width="2" stroke-linecap="round"/>`;
+    const cx = (Math.min(ankleN[0], ankleF[0]) + Math.max(ankleN[0], ankleF[0])) / 2;
+    s += `<ellipse cx="${cx.toFixed(1)}" cy="${G + 5}" rx="${(Math.abs(ankleN[0] - ankleF[0]) / 2 + 22).toFixed(0)}" ry="3.2" fill="#000" opacity=".28"/>`;
+
+    // дальние конечности
+    s += limb([hipF, legF.K, legF.A], FAR, 8.5) + foot(legF, p.ft[1]);
+    s += limb([shF, armF.E, armF.F], FAR, 7.5);
+    s += `<circle cx="${armF.F[0].toFixed(1)}" cy="${armF.F[1].toFixed(1)}" r="4.8" fill="#d9b48e" stroke="#0b0f15" stroke-width="1.4"/>`;
+
+    // торс + пояс
+    const tPts = [hipC, shC];
+    s += limb(tPts, NEAR, 15);
+    const bt = 0.17; // пояс чуть выше бёдер
+    const bc = [hipC[0] + tv[0] * bt, hipC[1] + tv[1] * bt];
+    const nx = Math.cos(rad(p.torso)), ny = Math.sin(rad(p.torso)); // вдоль пояса
+    const bw = front ? 10 : 8.5;
+    s += `<line x1="${(bc[0] - nx * bw).toFixed(1)}" y1="${(bc[1] - ny * bw).toFixed(1)}" x2="${(bc[0] + nx * bw).toFixed(1)}" y2="${(bc[1] + ny * bw).toFixed(1)}" stroke="#0b0f15" stroke-width="8.2" stroke-linecap="butt"/>`;
+    s += `<line x1="${(bc[0] - nx * bw).toFixed(1)}" y1="${(bc[1] - ny * bw).toFixed(1)}" x2="${(bc[0] + nx * bw).toFixed(1)}" y2="${(bc[1] + ny * bw).toFixed(1)}" stroke="${belt}" stroke-width="5.4" stroke-linecap="butt"/>`;
+    if (stripe) {
+      s += `<line x1="${(bc[0] - nx * bw).toFixed(1)}" y1="${(bc[1] - ny * bw).toFixed(1)}" x2="${(bc[0] + nx * bw).toFixed(1)}" y2="${(bc[1] + ny * bw).toFixed(1)}" stroke="${stripe}" stroke-width="1.6" stroke-linecap="butt"/>`;
+    }
+    // узел пояса
+    s += `<circle cx="${(bc[0] + (front ? 0 : 3)).toFixed(1)}" cy="${(bc[1] + 1).toFixed(1)}" r="2.6" fill="${belt}" stroke="#0b0f15" stroke-width="1.2"/>`;
+
+    // ближняя нога
+    s += limb([hipN, legN.K, legN.A], NEAR, 9.5) + foot(legN, p.ft[0]);
+
+    // голова
+    s += `<circle cx="${neck[0].toFixed(1)}" cy="${neck[1].toFixed(1)}" r="${LEN.head}" fill="#f1cfae" stroke="#0b0f15" stroke-width="1.6"/>`;
+    // волосы
+    const lk = p.look >= 0 ? 1 : -1;
+    s += `<path d="M ${(neck[0] - 11).toFixed(1)} ${(neck[1] - 1).toFixed(1)} A 11 11 0 0 1 ${(neck[0] + 11).toFixed(1)} ${(neck[1] - 1).toFixed(1)} Q ${(neck[0] + (front ? 0 : -3 * lk)).toFixed(1)} ${(neck[1] - 8).toFixed(1)} ${(neck[0] - 11).toFixed(1)} ${(neck[1] - 1).toFixed(1)} Z" fill="#161616"/>`;
+    if (front) {
+      s += `<circle cx="${(neck[0] - 4).toFixed(1)}" cy="${(neck[1] + 1.5).toFixed(1)}" r="1.3" fill="#161616"/><circle cx="${(neck[0] + 4).toFixed(1)}" cy="${(neck[1] + 1.5).toFixed(1)}" r="1.3" fill="#161616"/>`;
+    } else {
+      s += `<circle cx="${(neck[0] + 5 * lk).toFixed(1)}" cy="${(neck[1] + 1.5).toFixed(1)}" r="1.4" fill="#161616"/>`;
+    }
+    // налобная повязка-«хатимаки» не рисуем, чтобы не усложнять
+
+    // ближняя рука (сверху)
+    s += limb([shN, armN.E, armN.F], NEAR, 7.5);
+    s += `<circle cx="${armN.F[0].toFixed(1)}" cy="${armN.F[1].toFixed(1)}" r="5" fill="#f1cfae" stroke="#0b0f15" stroke-width="1.4"/>`;
+
+    // удар
+    if (p.hit) {
+      const pt = { aa: armN.F, ab: armF.F, fa: legN.A, fb: legF.A }[p.hit];
+      if (pt) s += star(pt[0] + (opt.hitDx || 6), pt[1]);
+    }
+    return s;
+  }
+
+  // ---- проигрыватель кадров в контейнере ----
+  function Player(host, frames, opt) {
+    opt = opt || {};
+    const poses = frames.map(f => fill(f.pose));
+    const n = poses.length;
+    const hold = opt.hold || 650, move = opt.move || 520;
+    let svg, raf = 0, playing = false, tStart = 0, cur = 0, onFrame = opt.onFrame || (() => { });
+
+    host.innerHTML = '<svg viewBox="0 0 240 200" role="img" aria-label="' + (opt.label || 'движение') + '"></svg>';
+    svg = host.firstChild;
+
+    function draw(p) { svg.innerHTML = render(p, opt); }
+    function show(i) { cur = ((i % n) + n) % n; draw(poses[cur]); onFrame(cur); }
+
+    function tick(ts) {
+      if (!playing) return;
+      if (!tStart) tStart = ts;
+      const cycle = hold + move;
+      const total = cycle * n;
+      const t = (ts - tStart) % total;
+      const idx = Math.floor(t / cycle);
+      const within = t - idx * cycle;
+      const a = poses[idx], b = poses[(idx + 1) % n];
+      let pose;
+      if (within < hold) { pose = a; if (cur !== idx) { cur = idx; onFrame(idx); } }
+      else {
+        const k = ease((within - hold) / move);
+        pose = mix(a, b, k);
+        // метка удара: показываем вблизи кадра с hit
+        if (k > .8 && b.hit) pose.hit = b.hit;
+        if (k < .2 && a.hit) pose.hit = a.hit;
+      }
+      draw(pose);
+      raf = requestAnimationFrame(tick);
+    }
+
+    return {
+      play() { if (n < 2) return; playing = true; tStart = 0; cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); },
+      pause() { playing = false; cancelAnimationFrame(raf); },
+      isPlaying() { return playing; },
+      show(i) { this.pause(); show(i); },
+      next() { this.pause(); show(cur + 1); },
+      prev() { this.pause(); show(cur - 1); },
+      frame() { return cur; },
+      destroy() { this.pause(); host.innerHTML = ''; }
+    };
+  }
+
+  // статичная миниатюра одного кадра
+  function thumb(host, pose, opt) {
+    host.innerHTML = '<svg viewBox="0 0 240 200"></svg>';
+    host.firstChild.innerHTML = render(fill(pose), opt);
+  }
+
+  return { render, Player, thumb, fill, G };
+})();
+
+</script>
+<script>
+/* ============================================================
+   techniques.js — техники ITF: позы-кадры + пояснения
+   cat: stance | block | hand | kick
+   ============================================================ */
+const CH = [-30, 47];                 // кулак «на бедре» (вид сбоку)
+const GUARD_A = [50, 135], GUARD_B = [35, 120];
+const STAND = { hip: [110, 84], fa: [114, 0], fb: [106, 0] };
+const WALK_R = { hip: [112, 61], fa: [142, 0], fb: [56, 0] };   // ближняя нога впереди
+const WALK_L = { hip: [112, 61], fa: [56, 0], fb: [142, 0] };   // дальняя нога впереди
+const FRONT_STAND = { view: 'front', hip: [110, 84], fa: [127, 0], fb: [93, 0], ft: ['x', 'x'], bend: [1, -1], aa: [10, -75], ab: [-10, 75] };
+const FRONT_WALK = { view: 'front', hip: [110, 70], fa: [130, 0], fb: [90, 0], ft: ['x', 'x'], bend: [1, -1] };
+
+const TECH = [
+  /* ---------------- СТОЙКИ ---------------- */
+  {
+    id: 'narani', cat: 'stance', name: 'Параллельная стойка готовности', kor: '나란히 준비 서기 · Narani junbi sogi',
+    short: 'Стойка перед началом любого тула и упражнения',
+    steps: [
+      'Стопы стоят параллельно, на ширине плеч, носки смотрят прямо вперёд.',
+      'Ноги прямые, но колени не «замкнуты» — чуть расслаблены.',
+      'Кулаки перед животом на уровне пояса, локти немного согнуты.',
+      'Спина ровная, взгляд прямо перед собой. Дыши спокойно.'
+    ],
+    mistakes: ['Стопы развёрнуты «уточкой»', 'Плечи подняты к ушам', 'Смотришь в пол'],
+    frames: [
+      { label: 'Готов', pose: { ...FRONT_STAND } }
+    ]
+  },
+  {
+    id: 'gunnun', cat: 'stance', name: 'Передняя стойка ㄱ (кконын соги)', kor: 'ㄱ (киек) соги · Gunnun sogi',
+    short: 'Главная стойка тулей — на ней ты шагаешь, блокируешь и бьёшь',
+    steps: [
+      'Длина стойки примерно полторы ширины плеч, ширина — одна ширина плеч (стопы не на одной линии, как «по канату»).',
+      'Передняя нога согнута: колено над пальцами стопы, голень почти вертикально.',
+      'Задняя нога выпрямлена, но не зажата. Задняя стопа смотрит почти вперёд.',
+      'Вес примерно поровну на обе ноги. Корпус ровный, не наклоняйся.'
+    ],
+    mistakes: ['Колено уезжает дальше носка', 'Стойка слишком узкая, «по канату»', 'Задняя пятка отрывается от пола', 'Наклон вперёд'],
+    frames: [
+      { label: 'Встал прямо', pose: { ...STAND, aa: CH, ab: CH } },
+      { label: 'Шаг в стойку', pose: { ...WALK_R, aa: CH, ab: CH } }
+    ]
+  },
+  {
+    id: 'niunja', cat: 'stance', name: 'Стойка ㄴ (нинча соги)', kor: '니은자 서기 · Niunja sogi',
+    short: 'Корпус боком, почти весь вес на задней ноге',
+    steps: [
+      'Задняя стопа повёрнута боком (под 90° к передней), а передняя смотрит прямо.',
+      'Вес примерно 70% на заднюю ногу и 30% на переднюю.',
+      'Задняя нога согнута, колено над стопой. Передняя нога чуть согнута и лёгкая.',
+      'Бёдра и плечи повёрнуты боком к направлению стойки, голова смотрит вперёд.'
+    ],
+    mistakes: ['Вес посередине, как в передней стойке', 'Задняя стопа смотрит вперёд, а не боком', 'Спина кренится назад'],
+    frames: [
+      { label: 'Встал прямо', pose: { ...STAND, aa: GUARD_A, ab: GUARD_B } },
+      { label: 'Стойка ㄴ', pose: { hip: [88, 58], fa: [126, 0], fb: [70, 0], ft: [90, 'x'], aa: [50, 130], ab: [40, 140] } }
+    ]
+  },
+  {
+    id: 'annun', cat: 'stance', name: 'Стойка «всадника» (сидячая)', kor: '앉은 서기 · Annun sogi',
+    short: 'Широко расставленные ноги, вес ровно посередине',
+    steps: [
+      'Стопы параллельно, ширина стойки примерно полторы ширины плеч.',
+      'Колени согнуты наружу и смотрят в ту же сторону, что и носки.',
+      'Вес поровну на обе ноги. Таз чуть опущен, спина вертикальная.',
+      'Кулаки у пояса или выполняешь технику — корпус не качается.'
+    ],
+    mistakes: ['Колени заваливаются внутрь', 'Таз «отъезжает» назад', 'Вес уходит на одну ногу'],
+    frames: [
+      { label: 'Встал прямо', pose: { ...FRONT_STAND } },
+      { label: 'Сел в стойку', pose: { view: 'front', hip: [110, 54], fa: [160, 0], fb: [60, 0], ft: ['x', 'x'], bend: [1, -1], aa: [15, -70], ab: [-15, 70] } }
+    ]
+  },
+  {
+    id: 'sine', cat: 'stance', name: 'Синусоида — волна движения', kor: 'Sine wave',
+    short: 'Фирменная «фишка» ITF: вверх при шаге, вниз в момент техники',
+    steps: [
+      'Начинаешь шаг: тело расслабленно чуть поднимается — как гребень волны.',
+      'Нога проходит рядом с опорной, тело в верхней точке волны.',
+      'Ставишь ногу и в тот же миг вес тела «падает» вниз — в блок или удар. Это добавляет силы.',
+      'Волна плавная, без рывков и без прыжков: голова движется вверх-вниз, а не вперёд-назад.'
+    ],
+    mistakes: ['Шаг без подъёма — «как по ровной линии»', 'Подпрыгиваешь вверх', 'Опускаешься после удара, а не вместе с ним'],
+    frames: [
+      { label: '1. Низко (конец прошлой техники)', pose: { ...WALK_L, aa: CH, ab: [75, 78] } },
+      { label: '2. Вверх: шаг', pose: { hip: [112, 80], fa: [122, 16], fb: [100, 0], torso: 3, aa: [-20, 50], ab: [30, 65] } },
+      { label: '3. Вниз: техника', pose: { ...WALK_R, aa: [75, 78], ab: CH, hit: 'aa' } }
+    ]
+  },
+
+  /* ---------------- БЛОКИ ---------------- */
+  {
+    id: 'arae', cat: 'block', name: 'Нижний блок', kor: '아래막기 · Arae makgi',
+    short: 'Защита живота и пояса от удара снизу',
+    steps: [
+      'Блокирующая рука стартует со стороны противоположного плеча, второй кулак — на бедре.',
+      'Предплечье идёт вниз и в сторону по диагонали, а не «рубит» вертикально.',
+      'Заканчиваешь над бедром передней ноги (не касаясь ноги), рука почти прямая.',
+      'Бёдра и вес тела вкладываются в конец блока, на выдохе.'
+    ],
+    mistakes: ['Блок бьёт по собственной ноге', 'Локоть уходит в сторону', 'Кулак остаётся слишком высоко'],
+    frames: [
+      { label: '1. Старт у плеча', pose: { ...WALK_R, aa: [65, 205], ab: CH } },
+      { label: '2. Вниз по диагонали', pose: { ...WALK_R, aa: [50, 140], ab: CH } },
+      { label: '3. Конец блока', pose: { ...WALK_R, torso: 4, aa: [25, 25], ab: CH, hit: 'aa' } }
+    ]
+  },
+  {
+    id: 'bakat', cat: 'block', name: 'Средний блок снаружи (внешней стороной предплечья)', kor: 'Bakat palmok momtong makgi',
+    short: 'Движение изнутри наружу, защита корпуса. Вид спереди.',
+    steps: [
+      'Блокирующая рука стартует с противоположной стороны, у плеча, кулак у центра груди.',
+      'Предплечье проходит перед телом и идёт наружу, второй кулак остаётся на бедре.',
+      'Конец: локоть согнут примерно на 90°, кулак на уровне плеча, предплечье почти вертикально.',
+      'Блокируешь внешней (мышечной) стороной предплечья, а не локтем и не кистью.'
+    ],
+    mistakes: ['Локоть слишком вытянут в сторону', 'Кулак ниже плеча', 'Рука «качается» в конце блока'],
+    frames: [
+      { label: '1. Старт у плеча', pose: { ...FRONT_WALK, aa: [-60, 195], ab: [-15, 70] } },
+      { label: '2. Перед телом', pose: { ...FRONT_WALK, aa: [-15, 185], ab: [-15, 70] } },
+      { label: '3. Наружу — блок', pose: { ...FRONT_WALK, aa: [35, 182], ab: [-15, 70], hit: 'aa' } }
+    ]
+  },
+  {
+    id: 'anpalmok', cat: 'block', name: 'Средний блок изнутри (внутренней стороной предплечья)', kor: 'Anpalmok momtong makgi',
+    short: 'Движение снаружи внутрь, защита корпуса. Вид спереди.',
+    steps: [
+      'Рука стартует сбоку, чуть выше плеча, локоть согнут — как будто «замах».',
+      'Предплечье идёт снаружи внутрь по короткой дуге, второй кулак на бедре.',
+      'Конец: кулак на уровне плеча перед грудью, локоть вниз. Блокируешь внутренней стороной предплечья.',
+      'Корпус работает вместе с рукой — поворачиваешь бёдра, а не только машешь рукой.'
+    ],
+    mistakes: ['Блок слишком широкий', 'Локоть высоко поднят', 'Кулак закрывает лицо, а не корпус'],
+    frames: [
+      { label: '1. Замах сбоку', pose: { ...FRONT_WALK, aa: [85, 175], ab: [-15, 70] } },
+      { label: '2. Внутрь по дуге', pose: { ...FRONT_WALK, aa: [40, 180], ab: [-15, 70] } },
+      { label: '3. Конец блока', pose: { ...FRONT_WALK, aa: [-15, 185], ab: [-15, 70], hit: 'aa' } }
+    ]
+  },
+  {
+    id: 'chookyo', cat: 'block', name: 'Подъёмный блок', kor: 'Chookyo makgi',
+    short: 'Защита головы от удара сверху',
+    steps: [
+      'Предплечье стартует перед животом, кулак у противоположного бедра.',
+      'Рука поднимается по центру тела вверх, как будто прочерчиваешь линию.',
+      'Конец: предплечье над лбом, примерно на расстоянии кулака, под углом около 45°.',
+      'Блокирующая сторона предплечья принимает удар. Второй кулак остаётся на бедре.'
+    ],
+    mistakes: ['Рука слишком близко ко лбу', 'Блок полностью отвесный, а не под углом', 'Корпус откидывается назад'],
+    frames: [
+      { label: '1. Перед животом', pose: { ...WALK_R, aa: [20, 60], ab: CH } },
+      { label: '2. Вверх по центру', pose: { ...WALK_R, aa: [60, 120], ab: CH } },
+      { label: '3. Над лбом', pose: { ...WALK_R, aa: [100, 135], ab: CH, hit: 'aa' } }
+    ]
+  },
+
+  /* ---------------- УДАРЫ РУКАМИ ---------------- */
+  {
+    id: 'baro', cat: 'hand', name: 'Средний прямой удар (рука со стороны передней ноги)', kor: 'Momtong baro jirugi',
+    short: 'Удар в солнечное сплетение. Бьёт та рука, что на стороне передней ноги.',
+    steps: [
+      'Кулаки на бёдрах, ладонями вверх. Стойка — передняя.',
+      'Кулак идёт по прямой от бедра к цели. Локоть не «выпадает» наружу.',
+      'В конце удара кулак проворачивается ладонью вниз. Бьёшь двумя первыми костяшками (указательный и средний пальцы).',
+      'Второй кулак одновременно возвращается к бедру. Выдох в момент попадания. Запястье прямое.'
+    ],
+    mistakes: ['Удар «махом» сверху', 'Запястье подгибается', 'Кулак не доходит до уровня солнечного сплетения', 'Плечо задрано'],
+    frames: [
+      { label: '1. Кулаки на бёдрах', pose: { ...WALK_R, aa: CH, ab: CH } },
+      { label: '2. Выброс', pose: { ...WALK_R, aa: [40, 75], ab: [-35, 45] } },
+      { label: '3. Удар', pose: { ...WALK_R, aa: [75, 78], ab: [-40, 40], hit: 'aa' } }
+    ]
+  },
+  {
+    id: 'bandae', cat: 'hand', name: 'Средний прямой удар (противоположная рука)', kor: 'Momtong bandae jirugi',
+    short: 'Бьёт рука, которая на противоположной стороне от передней ноги. Самый сильный удар.',
+    steps: [
+      'Стойка — передняя, оба кулака на бёдрах.',
+      'Бьёшь рукой, которая противоположна передней ноге: бёдра и плечи поворачиваются вместе с ударом.',
+      'Кулак проворачивается ладонью вниз в самом конце, как и в других прямых ударах.',
+      'Вторая рука возвращается к бедру. Выдох в момент удара.'
+    ],
+    mistakes: ['Бёдра не поворачиваются, бьёт одна рука', 'Передняя нога качается', 'Кулак бьёт ниже сплетения'],
+    frames: [
+      { label: '1. Кулаки на бёдрах', pose: { ...WALK_R, aa: CH, ab: CH } },
+      { label: '2. Поворот бёдер', pose: { ...WALK_R, torso: 2, aa: [-35, 45], ab: [40, 75] } },
+      { label: '3. Удар', pose: { ...WALK_R, torso: 4, aa: [-40, 40], ab: [75, 78], hit: 'ab' } }
+    ]
+  },
+
+  /* ---------------- УДАРЫ НОГАМИ ---------------- */
+  {
+    id: 'ap', cat: 'kick', name: 'Передний удар (ап чаги)', kor: '앞차기 · Ap chagi (в ITF: Ap cha busigi)',
+    short: 'Быстрый удар прямо вперёд подушечкой стопы',
+    steps: [
+      'Поднимаешь колено вперёд на высоту пояса. Носок оттянут назад к себе.',
+      'Голень «выстреливает» вперёд. Бьёшь подушечкой стопы (ap kumchi), пальцы подтянуты.',
+      'Сразу возвращаешь ногу назад по той же линии — удар быстрый, как щелчок.',
+      'Опорная нога стоит крепко, корпус почти прямой, руки защищают корпус.'
+    ],
+    mistakes: ['Бьёшь пальцами', 'Откидываешься назад', 'Забываешь вернуть ногу и теряешь равновесие', 'Колено не поднято'],
+    frames: [
+      { label: '1. Стойка', pose: { ...STAND, aa: GUARD_A, ab: GUARD_B } },
+      { label: '2. Колено вверх', pose: { ...STAND, fa: [128, 52], ft: [60, 90], torso: -3, aa: GUARD_A, ab: GUARD_B } },
+      { label: '3. Удар', pose: { ...STAND, fa: [184, 70], ft: [150, 90], torso: -8, aa: GUARD_A, ab: GUARD_B, hit: 'fa' } },
+      { label: '4. Возврат', pose: { ...STAND, fa: [128, 52], ft: [60, 90], torso: -3, aa: GUARD_A, ab: GUARD_B } }
+    ]
+  },
+  {
+    id: 'dollyo', cat: 'kick', name: 'Боковой удар по дуге (доли чаги)', kor: '돌려차기 · Dollyo chagi',
+    short: 'Удар по дуге: опорная нога поворачивается, бёдра закручиваются',
+    steps: [
+      'Опорная нога поворачивается, пятка идёт к цели. Колено уходит вперёд-в сторону.',
+      'Колено поднято к цели, стопа «в замке»: пальцы подтянуты.',
+      'Бёдра раскручиваются, голень выбрасывается по дуге. Бьёшь подушечкой стопы или подъёмом.',
+      'Сразу возвращаешь ногу в положение «колено вверх» и ставишь на пол.'
+    ],
+    mistakes: ['Опорная нога не поворачивается', 'Удар идёт только от колена, без бёдер', 'Нет возврата ноги'],
+    frames: [
+      { label: '1. Стойка', pose: { ...STAND, aa: GUARD_A, ab: GUARD_B } },
+      { label: '2. Поворот, колено вверх', pose: { ...STAND, fa: [108, 56], ft: [100, 'x'], torso: -4, aa: GUARD_A, ab: GUARD_B } },
+      { label: '3. Удар по дуге', pose: { ...STAND, fa: [192, 96], ft: [150, 'x'], torso: -22, aa: GUARD_A, ab: GUARD_B, hit: 'fa' } },
+      { label: '4. Возврат', pose: { ...STAND, fa: [108, 56], ft: [100, 'x'], torso: -4, aa: GUARD_A, ab: GUARD_B } }
+    ]
+  },
+  {
+    id: 'yop', cat: 'kick', name: 'Удар в сторону (ёп чаги)', kor: '옆차기 · Yop chagi (в ITF: Yop cha jirugi)',
+    short: 'Удар ребром стопы в сторону. Вид спереди.',
+    steps: [
+      'Колено поднимается перед телом, стопа возле опорного колена.',
+      'Тело разворачивается боком к цели, опорная стопа поворачивается.',
+      'Нога выпрямляется по прямой, бьёшь ребром стопы (balkal), пальцы чуть подтянуты.',
+      'Корпус отклоняется от цели, голова смотрит на цель. Потом — возврат ноги.'
+    ],
+    mistakes: ['Бьёшь носком вперёд', 'Колено не поднято перед ударом', 'Нога идёт вверх по дуге вместо прямой линии'],
+    frames: [
+      { label: '1. Стойка', pose: { ...FRONT_STAND } },
+      { label: '2. Колено вверх', pose: { ...FRONT_STAND, fa: [128, 46], ft: [90, 'x'], torso: -6 } },
+      { label: '3. Удар', pose: { ...FRONT_STAND, fa: [190, 66], ft: [90, 'x'], torso: -28, head: 22, hit: 'fa' } },
+      { label: '4. Возврат', pose: { ...FRONT_STAND, fa: [128, 46], ft: [90, 'x'], torso: -6 } }
+    ]
+  },
+  {
+    id: 'dwit', cat: 'kick', name: 'Задний удар (дви чаги)', kor: '뒤차기 · Dwit chagi (в ITF: Dwit cha jirugi)',
+    short: 'Удар пяткой назад — смотри на цель через плечо',
+    steps: [
+      'Поворачиваешь голову и смотришь на цель через плечо — сначала глаза, потом тело.',
+      'Поднимаешь колено, корпус наклоняется вперёд.',
+      'Нога выпрямляется назад по прямой линии, бьёшь пяткой (dwit chook).',
+      'Возвращаешь ногу и ставишь её на пол, не теряя равновесия.'
+    ],
+    mistakes: ['Не смотришь на цель', 'Колено не поднято, нога бьёт по дуге', 'Слишком низкий удар'],
+    frames: [
+      { label: '1. Стойка', pose: { ...STAND, aa: GUARD_A, ab: GUARD_B } },
+      { label: '2. Взгляд назад, колено вверх', pose: { ...STAND, fa: [100, 46], ft: [60, 90], torso: 12, head: -8, look: -1, aa: GUARD_A, ab: GUARD_B } },
+      { label: '3. Удар пяткой', pose: { hip: [112, 82], fa: [24, 64], fb: [110, 0], ft: [-60, 90], torso: 38, head: -6, look: -1, aa: [70, 110], ab: [60, 100], hit: 'fa' } },
+      { label: '4. Возврат', pose: { ...STAND, fa: [100, 46], ft: [60, 90], torso: 12, head: -8, look: -1, aa: GUARD_A, ab: GUARD_B } }
+    ],
+    hitDx: -8
+  }
+];
+
+const TECH_CATS = [
+  { id: 'all', label: 'Все' },
+  { id: 'stance', label: 'Стойки' },
+  { id: 'block', label: 'Блоки' },
+  { id: 'hand', label: 'Удары руками' },
+  { id: 'kick', label: 'Удары ногами' }
+];
+
+</script>
+<script>
+/* ============================================================
+   app.js — интерфейс сайта «Тхэквондо ITF»
+   Всё личное (пояс, галочки, прогресс, заметки) хранится
+   только в этом браузере (localStorage).
+   ============================================================ */
+(function () {
+  const KEY = 'tkd-itf-v1';
+  const DEF = { belt: 4, tab: 'home', open: {}, checks: {}, custom: {}, tul: {}, notes: {}, qcum: false, bestQ: {}, moves: {}, mvOpen: {}, best: 0, tech: 'all', wtab: 'dict', wgroup: 'all', q: '' };
+  let S = load();
+  function load() {
+    try { return Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { return Object.assign({}, DEF); }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const app = $('#app');
+  const beltBg = (c, s) => s ? `linear-gradient(90deg, ${c} 0 76%, ${s} 76% 90%, ${c} 90%)` : c;
+  const beltEl = (b, cls) => `<span class="belt ${cls || ''}" style="background:${beltBg(b.c, b.s)}"></span>`;
+  const bIdx = id => BELTS.findIndex(b => b.id === id);
+  const tulOf = id => TULS.find(t => t.id === id);
+  const myBelt = () => BELTS[S.belt] || BELTS[0];
+
+  /* ---------- чек-лист экзамена ---------- */
+  function examItems(b) {
+    const out = [];
+    const t = b.tul && tulOf(b.tul);
+    const i = bIdx(b.id);
+    if (b.id === 'dan1') {
+      TULS.filter(x => x.belt === 'dan1').forEach(x => out.push({ id: 'tul_' + x.id, t: `Тул ${x.name} (${x.rom}) — ${x.moves} движений` }));
+    } else if (t) {
+      out.push({ id: 'tul', t: `Тул ${t.name} (${t.rom}) — все ${t.moves} движений без подсказок` });
+    } else {
+      out.push({ id: 'etiq', t: 'Этикет: поклон, команды, правила зала' });
+      out.push({ id: 'ready', t: 'Параллельная стойка готовности и передняя стойка' });
+    }
+    const prev = TULS.filter(x => x.belt !== 'dan1' && bIdx(x.belt) < i);
+    if (prev.length) out.push({ id: 'prev', t: 'Прежние тули: ' + prev.map(x => x.name).join(', ') + ' — помню и могу показать', h: 'часто просят показать и пройденное — спроси тренера' });
+    out.push({ id: 'base', t: 'Базовая техника: стойки, блоки, удары руками и ногами — чётко, по команде' });
+    if (b.step) out.push({ id: 'step', t: `Шаговый спарринг: ${b.step}-шаговый`, h: 'обычно так, но у вас может быть по-другому' });
+    out.push({ id: 'theo', t: 'Теория и слова — пройти тест на этот пояс (кнопка «Теория»)' });
+    out.push({ id: 'ask', t: 'Спросить у тренера: нужны ли свободный спарринг, самооборона, разбивание, нормативы', h: 'это зависит от клуба' });
+    return out;
+  }
+  function progressOf(b) {
+    const items = examItems(b).map(x => x.id).concat((S.custom[b.id] || []).map(x => x.id));
+    const ch = S.checks[b.id] || {};
+    const done = items.filter(id => ch[id]).length;
+    return { done, total: items.length };
+  }
+  const bar = (done, total, ok) => `<div class="bar ${ok ? 'ok' : ''}"><i style="width:${total ? Math.round(done / total * 100) : 0}%"></i></div>`;
+
+  function checklist(b) {
+    const items = examItems(b), ch = S.checks[b.id] || {}, cu = S.custom[b.id] || [];
+    const row = (x, custom) => `<div class="check">
+      <input type="checkbox" id="c_${b.id}_${x.id}" data-act="chk" data-b="${b.id}" data-id="${x.id}" ${ch[x.id] ? 'checked' : ''}>
+      <label for="c_${b.id}_${x.id}">${esc(x.t)}${x.h ? `<small>${esc(x.h)}</small>` : ''}</label>
+      ${custom ? `<button class="x" data-act="chk-del" data-b="${b.id}" data-id="${x.id}" aria-label="Удалить">✕</button>` : ''}
+    </div>`;
+    const p = progressOf(b);
+    return `<div style="margin-top:10px"><b>Мой чек-лист</b> <span class="sub" style="color:var(--muted)">· ${p.done} из ${p.total}</span>${bar(p.done, p.total, p.done === p.total)}
+      <div style="margin-top:6px">${items.map(x => row(x)).join('')}${cu.map(x => row(x, true)).join('')}</div>
+      <div class="add"><input type="text" placeholder="Своя строчка, например «разбить доску»" data-add="${b.id}" maxlength="80"><button class="btn ghost" data-act="chk-add" data-b="${b.id}">＋</button></div></div>`;
+  }
+
+  /* ---------- шапка ---------- */
+  function renderBadge() {
+    const b = myBelt();
+    $('#meBadge').innerHTML = `${beltEl(b, 'sm')}<span>${esc(b.name.split(' ')[0])}</span>`;
+  }
+
+  /* ---------- главная ---------- */
+  function viewHome() {
+    const b = myBelt(), nx = BELTS[S.belt + 1];
+    const p = nx ? progressOf(nx) : null;
+    const nt = nx && nx.tul ? tulOf(nx.tul) : null;
+    return `
+    <section class="hero">
+      <h1>Тхэквондо <span>ITF</span></h1>
+      <p>Как делать каждое движение и что нужно, чтобы сдать на следующий пояс. Всё в одном месте и всё под рукой на тренировке.</p>
+    </section>
+
+    <section class="sec">
+      <h2>🎯 Мой путь</h2>
+      <div class="card">
+        <b>Мой пояс сейчас</b>
+        <div class="me-pick" style="margin-top:10px">
+          ${BELTS.map((x, i) => `<button class="${i === S.belt ? 'on' : ''}" data-act="belt-set" data-i="${i}">${beltEl(x, 'sm')}<span>${esc(x.n)}</span></button>`).join('')}
+        </div>
+        ${nx ? `
+        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)">
+          <div style="display:flex;align-items:center;gap:10px">${beltEl(nx)}<div><b>Следующий экзамен — на ${esc(nx.n)}</b><div style="color:var(--muted);font-size:14px">${esc(nx.name)}${nt ? ` · тул ${esc(nt.name)} (${nt.moves} дв.)` : ''}</div></div></div>
+          <div style="margin-top:10px">${bar(p.done, p.total, p.done === p.total)}<div style="color:var(--muted);font-size:13px;margin-top:4px">Готово ${p.done} из ${p.total}</div></div>
+          <div class="row2" style="margin-top:12px"><button class="btn" data-act="belt-goto" data-id="${nx.id}">Открыть чек-лист</button>${nt ? `<button class="btn ghost" data-act="tul-goto">Мой тул</button>` : ''}<button class="btn" style="background:#8b5cf6" data-act="theory-belt" data-id="${nx.id}">🧠 Теория на ${esc(nx.n)}</button></div>
+        </div>` : `<p style="margin-top:12px;color:var(--muted)">Ты на самой высокой ступени этого сайта. Дальше идут новые даны — тренер расскажет.</p>`}
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>🚀 Куда дальше</h2>
+      <div class="grid">
+        <button class="card" data-act="tab" data-tab="tech" style="text-align:left"><b>🦵 Как делать движение</b><div style="color:var(--muted);font-size:14px;margin-top:4px">Стойки, блоки, удары: рисованный человечек, шаги и частые ошибки.</div></button>
+        <button class="card" data-act="tab" data-tab="belts" style="text-align:left"><b>🎽 Что сдавать</b><div style="color:var(--muted);font-size:14px;margin-top:4px">Все пояса от белого до чёрного, тули и чек-лист на экзамен.</div></button>
+        <button class="card" data-act="theory-go" style="text-align:left;border-color:#8b5cf6"><b>🧠 Теория по поясам</b><div style="color:var(--muted);font-size:14px;margin-top:4px">Свой набор вопросов на каждый пояс: от «кто основатель» до тулей и техник.</div></button>
+        <button class="card" data-act="tab" data-tab="words" style="text-align:left"><b>🇰🇷 Слова и тест</b><div style="color:var(--muted);font-size:14px;margin-top:4px">Корейские команды, названия техник и счёт. Проверь себя.</div></button>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>🥋 Про ITF</h2>
+      <details class="fold"><summary>Что такое тхэквондо ITF</summary><div class="c">
+        <p><b>Тхэ</b> — нога, <b>Квон</b> — кулак (рука), <b>До</b> — путь. Название придумали в Корее в 1955 году, а Международная федерация тхэквондо (ITF) появилась в Сеуле в 1966 году. У основателя, генерала Чхве Хон Хи, была идея не только про удары, но и про характер.</p>
+        <p>Сейчас есть несколько организаций, которые называют себя ITF, поэтому в разных клубах экзамены немного отличаются. Свой список всегда уточняй у тренера.</p>
+      </div></details>
+      <details class="fold"><summary>5 принципов тхэквондо</summary><div class="c">
+        <ul>${TENETS.map(t => `<li><b>${esc(t.r)}</b> — ${esc(t.k)} ${t.h ? `<span style="color:#ffd9a0">${t.h}</span>` : ''}</li>`).join('')}</ul>
+      </div></details>
+      <details class="fold"><summary>Клятва ученика (смысл)</summary><div class="c"><ol>${OATH.map(o => `<li>${esc(o)}</li>`).join('')}</ol></div></details>
+      <details class="fold"><summary>6 законов силы удара</summary><div class="c"><ul>${POWER.map(p => `<li><b>${esc(p.k)}.</b> ${esc(p.d)}</li>`).join('')}</ul></div></details>
+      <details class="fold"><summary>⚠️ Как пользоваться этим сайтом</summary><div class="c">
+        <p>Сайт собран с помощью ИИ — он может ошибаться в мелочах: сколько точно сантиметров, в какой руке кулак на третьем движении, какие требования у именно вашей федерации. <b>Если сайт и тренер говорят по-разному — прав тренер.</b></p>
+        <p>Новые удары и пинки пробуй только на тренировке под присмотром тренера и после разминки.</p>
+      </div></details>
+    </section>
+    <p class="foot">Сделано Вовой вместе с Verity 🥋</p>`;
+  }
+
+  /* ---------- пояса ---------- */
+  function viewBelts() {
+    return `
+    <section class="sec" style="margin-top:0">
+      <h2>🎽 Пояса ITF</h2>
+      <p class="lead">Нажми на пояс — увидишь, какой тул сдают и что нужно подготовить. Золотой — твой, красный — следующий экзамен.</p>
+      <details class="fold"><summary>Что вообще проверяют на экзамене</summary><div class="c">
+        <ul>${EXAM_PARTS.map(e => `<li><b>${esc(e.t)}.</b> ${esc(e.d)}</li>`).join('')}</ul>
+        <div class="note" style="margin-top:8px">Набор частей у каждого клуба свой. Это общая схема, а точный список даёт тренер.</div>
+      </div></details>
+      <div class="ladder">
+        ${BELTS.slice().reverse().map(b => {
+      const i = bIdx(b.id), me = i === S.belt, nx = i === S.belt + 1, open = S.open[b.id];
+      const t = b.tul ? tulOf(b.tul) : null;
+      return `<div class="bt ${open ? 'open' : ''} ${me ? 'me' : ''} ${nx ? 'next' : ''}" id="belt_${b.id}">
+            <div class="row" data-act="belt-open" data-id="${b.id}" role="button" tabindex="0">
+              ${beltEl(b)}
+              <div><div class="ttl">${esc(b.n)} ${me ? '<span class="tag me">МОЙ</span>' : ''}${nx ? '<span class="tag next">СЛЕДУЮЩИЙ</span>' : ''}</div><div class="sub">${esc(b.name)}${t ? ` · ${esc(t.rom)}` : ''}</div></div>
+              <span class="go">›</span>
+            </div>
+            <div class="body" ${open ? '' : 'hidden'}>${open ? beltBody(b) : ''}</div>
+          </div>`;
+    }).join('')}
+      </div>
+    </section>`;
+  }
+  function beltBody(b) {
+    const t = b.tul ? tulOf(b.tul) : null;
+    const pills = [];
+    if (b.id === 'dan1') pills.push(`<span class="pill">Тули: <b>${TULS.filter(x => x.belt === 'dan1').map(x => x.rom + ' (' + x.moves + ')').join(', ')}</b></span>`);
+    else if (t) pills.push(`<span class="pill">Тул: <b>${esc(t.name)} · ${t.moves} дв.</b></span>`);
+    else pills.push(`<span class="pill">Тулей <b>нет</b></span>`);
+    if (b.step) pills.push(`<span class="pill">Шаговый спарринг: <b>${b.step}-шаговый</b> (обычно)</span>`);
+    return `<p>${esc(b.focus)}</p>
+      <div class="kv">${pills.join('')}</div>
+      ${t && b.id !== 'dan1' ? `<p style="color:var(--muted);font-size:14px">${esc(t.meaning)}</p>` : ''}
+      ${b.id !== 'dan1' ? `<div class="kv"><button class="btn" style="background:#8b5cf6" data-act="theory-belt" data-id="${b.id}">🧠 Теория на ${esc(b.n)}</button></div>` : ''}
+      ${b.techs ? `<div class="kv">${b.techs.map(id => { const q = TECH.find(x => x.id === id); return q ? `<button class="chip" data-act="tech-open" data-id="${id}">${esc(q.name.split(' (')[0])}</button>` : ''; }).join('')}</div>` : ''}
+      ${checklist(b)}`;
+  }
+
+  /* ---------- техники ---------- */
+  function keyFrame(t) { return (t.frames.find(f => f.pose.hit) || t.frames[t.frames.length - 1]).pose; }
+  function viewTech() {
+    const list = TECH.filter(t => S.tech === 'all' || t.cat === S.tech);
+    return `
+    <section class="sec" style="margin-top:0">
+      <h2>🦵 Техники</h2>
+      <p class="lead">Нажми на технику: человечек в твоём поясе покажет её по кадрам.</p>
+      <div class="chips">${TECH_CATS.map(c => `<button class="chip ${S.tech === c.id ? 'on' : ''}" data-act="tech-filter" data-id="${c.id}">${esc(c.label)}</button>`).join('')}</div>
+      <div class="grid" id="techGrid">
+        ${list.map(t => `<button class="tc" data-act="tech-open" data-id="${t.id}"><div class="pic" data-thumb="${t.id}"></div><div class="t"><b>${esc(t.name)}</b><span>${esc(t.kor)}</span></div></button>`).join('')}
+      </div>
+    </section>`;
+  }
+  function paintThumbs() {
+    $$('[data-thumb]').forEach(el => {
+      const t = TECH.find(x => x.id === el.dataset.thumb), b = myBelt();
+      FIG.thumb(el, keyFrame(t), { belt: b.c, stripe: b.s, hitDx: t.hitDx });
+    });
+  }
+
+  let player = null;
+  function openTech(id) {
+    const t = TECH.find(x => x.id === id); if (!t) return;
+    const sheet = $('#sheet'), b = myBelt();
+    sheet.hidden = false;
+    sheet.innerHTML = `<div class="in" role="dialog" aria-label="${esc(t.name)}">
+      <div class="head"><div><h2>${esc(t.name)}</h2><small>${esc(t.kor)}</small></div><button class="close" data-act="close" aria-label="Закрыть">✕</button></div>
+      <p style="color:var(--muted);margin:8px 0 0">${esc(t.short)}</p>
+      <div class="stage"><div class="fig" id="fig"></div><div class="cap" id="cap"></div>
+        <div class="ctrls"><button data-act="fprev" aria-label="Назад">⏮</button><button data-act="fplay" id="fplay" aria-label="Играть/пауза">⏸</button><button data-act="fnext" aria-label="Дальше">⏭</button>
+        <div class="dots" id="dots">${t.frames.map((f, i) => `<i data-act="fgo" data-i="${i}" style="cursor:pointer"></i>`).join('')}</div></div>
+      </div>
+      <div class="sec" style="margin-top:16px"><h2 style="font-size:17px">Как делать</h2><ol class="steps">${t.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>
+      <div class="sec" style="margin-top:12px"><h2 style="font-size:17px">Частые ошибки</h2><ul class="mis">${t.mistakes.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
+      <div class="note blue" style="margin-top:12px">Человечек показывает идею. Точную постановку руки и стопы тебе поправит тренер.</div>
+    </div>`;
+    const cap = $('#cap'), dots = $$('#dots i');
+    const setDots = i => { dots.forEach((d, k) => d.classList.toggle('on', k === i)); cap.textContent = t.frames[i].label; };
+    player = FIG.Player($('#fig'), t.frames, { belt: b.c, stripe: b.s, hitDx: t.hitDx, label: t.name, onFrame: setDots });
+    setDots(0);
+    if (t.frames.length > 1) { player.play(); } else { $('#fplay').style.visibility = 'hidden'; $('[data-act=fprev]').style.visibility = 'hidden'; $('[data-act=fnext]').style.visibility = 'hidden'; player.show(0); }
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSheet() {
+    if (player) { player.destroy(); player = null; }
+    const sh = $('#sheet'); sh.hidden = true; sh.innerHTML = '';
+    document.body.style.overflow = '';
+  }
+
+  /* ---------- тули ---------- */
+  function chunksHTML(t) {
+    const n = S.tul[t.id] || 0, step = 6, out = [];
+    for (let a = 1; a <= t.moves; a += step) {
+      const z = Math.min(a + step - 1, t.moves);
+      out.push(`<span class="${n >= z ? 'done' : ''}">${a}–${z}</span>`);
+    }
+    return out.join('');
+  }
+  const MV_CHIPS = ['ㄱ соги', 'ㄴ соги', 'всадник', 'нижний блок', 'средний блок', 'подъёмный блок', 'средний удар', 'ап чаги', 'доли чаги', 'ёп чаги', 'дви чаги', 'левой', 'правой', 'налево', 'направо', 'разворот'];
+  function movesList(t) {
+    const a = S.moves[t.id] || [];
+    if (!a.length) return '<p style="color:var(--muted);font-size:14px;margin:8px 0">Пока пусто. Добавляй движения по порядку, как их показывает тренер.</p>';
+    return a.map((m, i) => `<div class="mv"><span class="n">${i + 1}</span><input type="text" value="${esc(m.t)}" data-act="mv-edit" data-id="${t.id}" data-i="${i}" maxlength="120"><input type="checkbox" title="знаю" aria-label="знаю" ${m.k ? 'checked' : ''} data-act="mv-know" data-id="${t.id}" data-i="${i}"><button class="x" data-act="mv-del" data-id="${t.id}" data-i="${i}" aria-label="Удалить">✕</button></div>`).join('');
+  }
+  function mvCount(t) {
+    const a = S.moves[t.id] || [], k = a.filter(m => m.k).length;
+    return `(${a.length} из ${t.moves}${a.length ? ', знаю ' + k : ''})`;
+  }
+  function movesBlock(t) {
+    const a = S.moves[t.id] || [];
+    return `<details data-mvopen="${t.id}" ${S.mvOpen[t.id] ? 'open' : ''} style="margin-top:8px"><summary style="cursor:pointer;font-size:14px"><b>Движения по порядку</b> <span id="mv_cnt_${t.id}" style="color:var(--muted)">${mvCount(t)}</span></summary>
+      <div id="mv_list_${t.id}">${movesList(t)}</div>
+      <div class="chunks">${MV_CHIPS.map(c => `<button class="chip" style="padding:5px 10px;font-size:13px" data-act="mv-chip" data-id="${t.id}" data-txt="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+      <div class="add"><input type="text" data-mvadd="${t.id}" id="mv_add_${t.id}" placeholder="Движение ${a.length + 1}: например «ㄱ соги, нижний блок»" maxlength="120"><button class="btn ghost" data-act="mv-add" data-id="${t.id}" aria-label="Добавить">＋</button></div></details>`;
+  }
+  function mvRefresh(id) {
+    const t = tulOf(id), a = S.moves[id] || [];
+    $('#mv_list_' + id).innerHTML = movesList(t);
+    $('#mv_cnt_' + id).textContent = mvCount(t);
+    $('#mv_add_' + id).placeholder = `Движение ${a.length + 1}: например «ㄱ соги, нижний блок»`;
+  }
+  function tulCard(t) {
+    const b = BELTS[bIdx(t.belt)], n = S.tul[t.id] || 0;
+    return `<div class="card tul" id="tul_${t.id}">
+      <div class="head"><div class="num">${t.moves}</div><div><h3>${esc(t.name)} <span style="color:var(--muted);font-weight:500">${esc(t.rom)}</span></h3>
+        <div class="sub" style="display:flex;align-items:center;gap:8px;margin-top:3px">${beltEl(b, 'sm')}<span>${esc(b.n)} · ${esc(b.name)}</span></div></div></div>
+      <div class="meaning">${esc(t.meaning)}</div>
+      <div id="tl_lab_${t.id}" style="display:flex;justify-content:space-between;font-size:14px"><b>Выучил ${n} из ${t.moves}</b><span style="color:var(--ok)">${n >= t.moves ? '✓ весь тул!' : ''}</span></div>
+      <input type="range" min="0" max="${t.moves}" value="${n}" data-act="tul-range" data-id="${t.id}">
+      <div class="chunks" id="tl_ch_${t.id}">${chunksHTML(t)}</div>
+      ${movesBlock(t)}
+      <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--muted);font-size:14px">Мой конспект</summary>
+        <textarea data-act="note" data-id="${t.id}" placeholder="Что сложно, что подсказал тренер, какие движения путаю…"></textarea></details>
+    </div>`;
+  }
+  function viewTuls() {
+    const color = TULS.filter(t => t.belt !== 'dan1'), dan = TULS.filter(t => t.belt === 'dan1');
+    return `
+    <section class="sec" style="margin-top:0">
+      <h2>📜 Тули</h2>
+      <p class="lead">Тул — это «танец с боем» с воображаемым соперником. Двигай ползунок, когда выучил ещё несколько движений.</p>
+      <details class="fold"><summary>Как учить тул быстро</summary><div class="c"><ol>
+        <li>Делай по 4–6 движений, потом соединяй куски.</li>
+        <li>Сначала считай вслух, потом про себя.</li>
+        <li>Следи, где ты должен закончить: тул возвращает тебя на ту же точку, с которой ты начал.</li>
+        <li>Не торопись. Сначала чисто, потом быстро.</li>
+        <li>Раз в день проходи весь тул, даже если всего один раз.</li>
+      </ol></div></details>
+      <div class="note blue" style="margin-bottom:12px">Движения тулей записывай сам, как их показывает тренер: так список будет точным именно для вашей федерации. Открой «Движения по порядку» в нужном туле.</div>
+      <div class="stack">${color.map(tulCard).join('')}</div>
+    </section>
+    <section class="sec">
+      <h2>⚫ Тули чёрного пояса</h2>
+      <div class="stack">${dan.map(tulCard).join('')}</div>
+    </section>`;
+  }
+  function fillNotes() { $$('textarea[data-act=note]').forEach(el => { el.value = S.notes[el.dataset.id] || ''; }); }
+
+  /* ---------- слова ---------- */
+  function viewWords() {
+    return `
+    <section class="sec" style="margin-top:0">
+      <h2>🇰🇷 Слова</h2>
+      <div class="chips"><button class="chip ${S.wtab === 'dict' ? 'on' : ''}" data-act="wtab" data-id="dict">Словарь</button><button class="chip ${S.wtab === 'quiz' ? 'on' : ''}" data-act="wtab" data-id="quiz">Тест</button></div>
+      <div id="wbody">${S.wtab === 'dict' ? dictHTML() : quizHTML()}</div>
+    </section>`;
+  }
+  function filteredWords() {
+    const q = S.q.trim().toLowerCase();
+    return WORDS.filter(w => (S.wgroup === 'all' || w.g === S.wgroup) && (!q || (w.k + ' ' + w.r + ' ' + w.h).toLowerCase().includes(q)));
+  }
+  function dictList() {
+    const list = filteredWords();
+    return list.length ? list.map(w => `<div class="word"><div class="h">${esc(w.h || '·')}</div><div><div class="k">${esc(w.k)}</div><div class="r">${esc(w.r)}</div></div></div>`).join('') : '<p style="color:var(--muted)">Ничего не найдено.</p>';
+  }
+  function dictHTML() {
+    return `<input type="search" id="wq" placeholder="Поиск: корейское слово или перевод" value="${esc(S.q)}" style="margin-bottom:10px">
+      <div class="chips"><button class="chip ${S.wgroup === 'all' ? 'on' : ''}" data-act="wgroup" data-id="all">Все</button>${WORD_GROUPS.map(g => `<button class="chip ${S.wgroup === g.id ? 'on' : ''}" data-act="wgroup" data-id="${g.id}">${esc(g.label)}</button>`).join('')}</div>
+      <div class="stack" id="wlist">${dictList()}</div>`;
+  }
+
+  let quiz = null;
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  function wordQ(w, mode) {
+    const m = mode === 'mix' ? (Math.random() < .5 ? 'kr' : 'ru') : mode;
+    const same = shuffle(WORDS.filter(x => x !== w && x.g === w.g && x.r !== w.r));
+    const other = shuffle(WORDS.filter(x => x !== w && x.g !== w.g && x.r !== w.r));
+    const d = same.slice(0, 3); while (d.length < 3) d.push(other.shift());
+    const opts = shuffle([w].concat(d));
+    return {
+      ask: m === 'kr' ? `${esc(w.k)}<small>${esc(w.h)}</small>` : `${esc(w.r)}<small>Как это по-корейски?</small>`,
+      opts: opts.map(o => m === 'kr' ? o.r : o.k), ok: opts.indexOf(w)
+    };
+  }
+  const LV = BELTS.slice(0, 10).map(b => b.id);            // g10 … g1
+  const lvIdx = id => LV.indexOf(id);
+  function wordLevel(w) {
+    if (w.g === 'cmd') return 'g10';
+    if (w.g === 'num') return 'g9';
+    if (w.g === 'dojo') return 'g8';
+    if (w.g === 'tech') return 'g7';
+    return ['Ap', 'Yop', 'Dwit', 'Dollyo'].includes(w.k) ? 'g6' : 'g5';
+  }
+  function theoryPool() {
+    const out = THEORY.map(([q, ok, bad, lv]) => ({ q, ok, bad, lv }));
+    const cols = TULS.filter(t => t.belt !== 'dan1');
+    BELTS.filter(b => b.tul && b.id !== 'dan1').forEach(b => {
+      const t = tulOf(b.tul);
+      out.push({ q: `Какой тул сдают на ${b.n} (${b.name.toLowerCase()})?`, ok: `${t.name} (${t.rom})`, bad: shuffle(cols.filter(x => x !== t)).slice(0, 3).map(x => `${x.name} (${x.rom})`), lv: b.id });
+      out.push({ q: `Сколько движений в туле ${t.name} (${t.rom})?`, ok: String(t.moves), bad: shuffle(cols.filter(x => x.moves !== t.moves)).slice(0, 3).map(x => String(x.moves)), lv: b.id });
+    });
+    return out;
+  }
+  function theoryQ(x) {
+    const opts = shuffle([x.ok].concat(x.bad));
+    return { ask: esc(x.q), opts, ok: opts.indexOf(x.ok), long: true };
+  }
+  function beltPool(id, cum) {
+    const k = lvIdx(id);
+    return theoryPool().filter(x => cum ? lvIdx(x.lv) <= k : x.lv === id);
+  }
+  function startQuiz(mode) {
+    let qs;
+    if (mode.startsWith('b:')) {
+      const id = mode.slice(2), cum = S.qcum;
+      qs = beltPool(id, cum).map(theoryQ);
+      const ws = WORDS.filter(w => cum ? lvIdx(wordLevel(w)) <= lvIdx(id) : wordLevel(w) === id);
+      qs = qs.concat(shuffle(ws).slice(0, cum ? 6 : 4).map(w => wordQ(w, 'mix')));
+      qs = shuffle(qs).slice(0, 20);
+    } else if (mode === 'theory') {
+      qs = shuffle(theoryPool()).slice(0, 10).map(theoryQ);
+    } else {
+      qs = shuffle(WORDS).slice(0, 10).map(w => wordQ(w, mode));
+    }
+    quiz = { i: 0, score: 0, picked: null, qs, key: mode + (mode.startsWith('b:') && S.qcum ? '+' : '') };
+  }
+  function quizHTML() {
+    if (!quiz) {
+      const best = k => S.bestQ[k] != null ? ` · рекорд ${S.bestQ[k]}%` : '';
+      const rows = BELTS.slice(0, 10).map(b => {
+        const n = beltPool(b.id, S.qcum).length;
+        return `<button class="bt" style="padding:10px 12px" data-act="quiz-start" data-id="b:${b.id}"><div class="row">${beltEl(b, 'sm')}<div><div class="ttl">Теория на ${esc(b.n)}</div><div class="sub">${esc(b.name)} · ${n} вопр.${best('b:' + b.id + (S.qcum ? '+' : ''))}</div></div><span class="go">›</span></div></button>`;
+      }).join('');
+      return `<div class="card"><p><b>🧠 Теория по поясам</b></p>
+        <p style="color:var(--muted);font-size:14px">Выбери пояс, на который готовишься: вопросы будут именно на этот уровень (тех, что в зале говорят и спрашивают).</p>
+        <div class="chips"><button class="chip ${!S.qcum ? 'on' : ''}" data-act="qcum" data-id="0">Только новое на этот пояс</button><button class="chip ${S.qcum ? 'on' : ''}" data-act="qcum" data-id="1">Всё до этого пояса</button></div>
+        <div class="ladder">${rows}</div></div>
+        <div class="card" style="margin-top:12px"><p><b>Ещё режимы</b></p>
+        <div class="stack"><button class="btn" style="background:#8b5cf6" data-act="quiz-start" data-id="theory">🧠 Вся теория вперемешку (10)</button><button class="btn" data-act="quiz-start" data-id="kr">Слова: корейское → по-русски</button><button class="btn blue" data-act="quiz-start" data-id="ru">Слова: по-русски → корейское</button><button class="btn ghost" data-act="quiz-start" data-id="mix">Слова вперемешку</button></div></div>`;
+    }
+    const N = quiz.qs.length;
+    if (quiz.i >= N) {
+      const sc = quiz.score, pct = Math.round(sc / N * 100);
+      const msg = pct === 100 ? 'Идеально! Тренер будет доволен 🥋' : pct >= 80 ? 'Очень сильно!' : pct >= 50 ? 'Хорошо, чуть подучить — и будет отлично.' : 'Ничего, это учится. Загляни в словарь и попробуй ещё раз.';
+      const rec = (S.bestQ[quiz.key] || 0) <= pct && pct > 0;
+      return `<div class="card" style="text-align:center"><div class="qbig">${sc} из ${N}<small>${msg}</small></div>${rec ? '<p style="color:var(--gold)">Это твой рекорд!</p>' : ''}
+        <div class="stack" style="margin-top:12px"><button class="btn" data-act="quiz-again">Ещё раз</button><button class="btn ghost" data-act="quiz-menu">К выбору пояса</button></div></div>`;
+    }
+    const q = quiz.qs[quiz.i];
+    return `<div class="card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:14px"><span>Вопрос ${quiz.i + 1} из ${N}</span><span>Счёт: ${quiz.score}</span></div>
+      <div class="qbig ${q.long ? 'q' : ''}">${q.ask}</div>
+      <div class="opts">${q.opts.map((o, i) => {
+      let cls = '';
+      if (quiz.picked !== null) { if (i === q.ok) cls = 'good'; else if (i === quiz.picked) cls = 'bad'; }
+      return `<button class="opt ${cls}" data-act="quiz-ans" data-i="${i}" ${quiz.picked !== null ? 'disabled' : ''}>${esc(o)}</button>`;
+    }).join('')}</div>
+      ${quiz.picked !== null ? `<div style="margin-top:12px"><button class="btn" style="width:100%" data-act="quiz-next">${quiz.i === N - 1 ? 'Результат' : 'Дальше'}</button></div>` : ''}</div>`;
+  }
+
+  /* ---------- главный рендер ---------- */
+  const VIEWS = { home: viewHome, belts: viewBelts, tech: viewTech, tuls: viewTuls, words: viewWords };
+  function render(keepScroll) {
+    const y = window.scrollY;
+    if (!VIEWS[S.tab]) S.tab = 'home';
+    app.innerHTML = VIEWS[S.tab]();
+    $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === S.tab));
+    renderBadge();
+    if (S.tab === 'tech') paintThumbs();
+    if (S.tab === 'tuls') fillNotes();
+    if (keepScroll) window.scrollTo(0, y);
+  }
+  function go(tab, anchor) {
+    S.tab = tab; save(); closeSheet(); render(false);
+    if (anchor) { const el = document.getElementById(anchor); if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' }); else window.scrollTo({ top: 0, behavior: 'instant' }); }
+    else window.scrollTo({ top: 0, behavior: 'instant' });
+    try { history.replaceState(null, '', '#' + tab); } catch (e) { }
+  }
+
+  /* ---------- события ---------- */
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-act]'); if (!el) {
+      if (e.target.id === 'sheet') closeSheet(); return;
+    }
+    const act = el.dataset.act, id = el.dataset.id;
+    switch (act) {
+      case 'tab': go(el.dataset.tab); break;
+      case 'theory-go': S.wtab = 'quiz'; quiz = null; save(); go('words'); break;
+      case 'belt-set': S.belt = +el.dataset.i; save(); render(true); break;
+      case 'belt-open': S.open[id] = !S.open[id]; save(); render(true); break;
+      case 'belt-goto': S.open[id] = true; save(); go('belts', 'belt_' + id); break;
+      case 'tul-goto': {
+        const nx = BELTS[S.belt + 1]; go('tuls', nx && nx.tul ? 'tul_' + nx.tul : null); break;
+      }
+      case 'chk-add': {
+        const inp = $(`input[data-add="${el.dataset.b}"]`), v = inp.value.trim(); if (!v) break;
+        (S.custom[el.dataset.b] = S.custom[el.dataset.b] || []).push({ id: 'c' + Date.now(), t: v }); save(); render(true); break;
+      }
+      case 'chk-del': {
+        const b = el.dataset.b; S.custom[b] = (S.custom[b] || []).filter(x => x.id !== id); if (S.checks[b]) delete S.checks[b][id]; save(); render(true); break;
+      }
+      case 'mv-chip': {
+        const inp = $('#mv_add_' + id); inp.value = (inp.value.trim() ? inp.value.trim() + ', ' : '') + el.dataset.txt; inp.focus(); break;
+      }
+      case 'mv-add': {
+        const inp = $('#mv_add_' + id), v = inp.value.trim(); if (!v) break;
+        (S.moves[id] = S.moves[id] || []).push({ t: v, k: false }); save(); inp.value = ''; mvRefresh(id); inp.focus(); break;
+      }
+      case 'mv-del': { (S.moves[id] || []).splice(+el.dataset.i, 1); save(); mvRefresh(id); break; }
+      case 'tech-filter': S.tech = id; save(); render(false); break;
+      case 'tech-open': openTech(id); break;
+      case 'close': closeSheet(); break;
+      case 'fplay': if (player) { if (player.isPlaying()) { player.pause(); el.textContent = '▶'; } else { player.play(); el.textContent = '⏸'; } } break;
+      case 'fnext': if (player) { player.next(); $('#fplay').textContent = '▶'; } break;
+      case 'fprev': if (player) { player.prev(); $('#fplay').textContent = '▶'; } break;
+      case 'fgo': if (player) { player.show(+el.dataset.i); $('#fplay').textContent = '▶'; } break;
+      case 'wtab': S.wtab = id; save(); if (id === 'quiz') quiz = null; render(true); break;
+      case 'wgroup': S.wgroup = id; save(); render(true); break;
+      case 'quiz-start': startQuiz(id); $('#wbody').innerHTML = quizHTML(); break;
+      case 'quiz-again': startQuiz(quiz.key.replace('+', '')); $('#wbody').innerHTML = quizHTML(); break;
+      case 'quiz-menu': quiz = null; $('#wbody').innerHTML = quizHTML(); break;
+      case 'qcum': S.qcum = id === '1'; save(); $('#wbody').innerHTML = quizHTML(); break;
+      case 'theory-belt': S.wtab = 'quiz'; S.tab = 'words'; startQuiz('b:' + id); save(); closeSheet(); render(false); window.scrollTo({ top: 0, behavior: 'instant' }); break;
+      case 'quiz-ans': {
+        if (quiz.picked !== null) break;
+        quiz.picked = +el.dataset.i;
+        if (quiz.picked === quiz.qs[quiz.i].ok) quiz.score++;
+        $('#wbody').innerHTML = quizHTML(); break;
+      }
+      case 'quiz-next':
+        quiz.i++; quiz.picked = null;
+        if (quiz.i >= quiz.qs.length) { const pct = Math.round(quiz.score / quiz.qs.length * 100); if (pct > (S.bestQ[quiz.key] || 0)) { S.bestQ[quiz.key] = pct; save(); } }
+        $('#wbody').innerHTML = quizHTML(); break;
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeSheet();
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-act=belt-open]')) { e.preventDefault(); e.target.click(); }
+    if (e.key === 'Enter' && e.target.matches('input[data-mvadd]')) { const b = $(`[data-act=mv-add][data-id="${e.target.dataset.mvadd}"]`); if (b) b.click(); }
+    if (e.key === 'Enter' && e.target.matches('input[data-add]')) { const btn = $(`[data-act=chk-add][data-b="${e.target.dataset.add}"]`); if (btn) btn.click(); }
+  });
+  document.addEventListener('change', e => {
+    const el = e.target;
+    if (el.matches('input[data-act=mv-know]')) {
+      const id = el.dataset.id; S.moves[id][+el.dataset.i].k = el.checked; save(); $('#mv_cnt_' + id).textContent = mvCount(tulOf(id)); return;
+    }
+    if (el.matches('input[data-act=chk]')) {
+      const b = el.dataset.b; (S.checks[b] = S.checks[b] || {})[el.dataset.id] = el.checked; save(); render(true);
+    }
+  });
+  document.addEventListener('input', e => {
+    const el = e.target;
+    if (el.id === 'wq') { S.q = el.value; $('#wlist').innerHTML = dictList(); }
+    else if (el.matches('input[data-act=tul-range]')) {
+      const id = el.dataset.id, t = tulOf(id), n = +el.value; S.tul[id] = n; save();
+      $('#tl_lab_' + id).innerHTML = `<b>Выучил ${n} из ${t.moves}</b><span style="color:var(--ok)">${n >= t.moves ? '✓ весь тул!' : ''}</span>`;
+      $('#tl_ch_' + id).innerHTML = chunksHTML(t);
+    } else if (el.matches('input[data-act=mv-edit]')) { S.moves[el.dataset.id][+el.dataset.i].t = el.value; save();
+    } else if (el.matches('textarea[data-act=note]')) { S.notes[el.dataset.id] = el.value; save(); }
+  });
+
+  document.addEventListener('toggle', e => {
+    const d = e.target; if (d && d.dataset && d.dataset.mvopen) { S.mvOpen[d.dataset.mvopen] = d.open; save(); }
+  }, true);
+
+  /* ---------- старт ---------- */
+  const h = (location.hash || '').slice(1);
+  if (VIEWS[h]) S.tab = h;
+  render(false);
+  window.addEventListener('hashchange', () => {
+    const t = (location.hash || '').slice(1);
+    if (VIEWS[t] && t !== S.tab) go(t);
+  });
+})();
+
+</script>
+</body>
+</html>
